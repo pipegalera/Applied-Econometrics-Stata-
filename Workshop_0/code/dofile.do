@@ -2,21 +2,21 @@
 * 2 Initial options                      *
 ******************************************
 
+cls
 clear all
 capture log c
-cd "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/code"
-log using Workshop_1.log, replace
+global path "/Users/mac/GitHub/Applied-Econometrics-Stata-/Workshop_0"
+cd "$path"
+log using "$path/code/Workshop_1.log", replace
 set more off
 
 ******************************************
 * 3 Reading a text data set              *
 ******************************************
 
-cd "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/raw_data"
-
 infile storeid str12 status2 empft2 emppt2 nmgrs2 /*
   */ wage_st2 hrsopen2 psoda2 pfry2 pmeal2 /*
-  */ using interview2.txt, clear
+  */ using "$path/raw_data/interview2.txt", clear
 
 desc
 
@@ -47,7 +47,7 @@ bysort status2: gen obsno3=_N /* same as before, create a column with the count 
 * 6 Saving the data set                  *
 ******************************************
 
-save "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/mod_data/interview2.dta", replace
+save "$path/mod_data/interview2.dta", replace
 
 ******************************************
 * 7 Merging data sets                    *
@@ -57,13 +57,13 @@ duplicates report storeid /*the variable we will merge by is unique or not*/
 
 clear all /*just one dataset in the memory*/
 
-cd "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/mod_data/"
-use "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/raw_data/interview1.dta", clear
+cd "/$path/mod_data/"
+use "$path/raw_data/interview1.dta", clear
 
 sort storeid
 duplicates report storeid
 
-merge 1:1 storeid using "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/raw_data/interview2.dta"
+merge 1:1 storeid using "$path/raw_data/interview2.dta"
 drop _merge
 
 ******************************************
@@ -123,7 +123,7 @@ gen chain_num = 1*(chain=="Burger King")+2*(chain=="KFC")+ ///
 xi i.chain /*create dummies of the selected string variable (alternative)*/
 xi i.chain*i.nj, noomit /*STATA will select all variables starting by "_Ichain" no matter their suffix */
 
-save "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/mod_data/interview2.dta", replace
+save "$path/mod_data/interview2.dta", replace
 
 ******************************************
 * 10 Descriptive statistics              *
@@ -159,8 +159,8 @@ graph drop _all /*display every graph created by the do file*/
 hist wage_st, name(fig1)
 hist wage_st2, name(fig2)
 graph combine fig1 fig2, name(fig3)
-graph save fig3 "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/graphs/figure3.gph", replace
-graph export "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/graphs/figure3.png", name(fig3) replace
+graph save fig3 "$path/graphs/figure3.gph", replace
+graph export "$path/graphs/figure3.png", name(fig3) replace
 
 graph bar (mean) dwage, over(nj) name(fig4)
 /* The increase in the minimum wage in New
@@ -191,8 +191,8 @@ graph combine fig5 fig6, name(fig7)
 in New Jersey, whereas starting wages and employment in the fast food restaurants
 decrease in Pennsylvania. This contradicts standard economic theory. */
 
-graph save fig7 "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/graphs/figure7.gph", replace
-graph export "/Users/mac/GoogleDrive/Universidad/Master KU/4rd SEMESTER/Applied_Econometrics/Workshop_0/graphs/figure7.png", name(fig7) replace
+graph save fig7 "$path/graphs/figure7.gph", replace
+graph export "$path/graphs/figure7.png", name(fig7) replace
 
 restore /*going back to the original "unchanged" dataframe*/
 
@@ -235,3 +235,62 @@ disp "The corresponding standard errors are " se1
 scalar t1=beta1/se1
 disp "The corresponding t-statistic is " t1
 	
+******************************************
+* 14 Globals                             *
+******************************************
+
+global x nj bk kfc roy co_owned
+reg demp $x, robust
+
+******************************************
+* 15 Producing tables for Excel and TeX  *
+******************************************
+
+* ssc install estout, replace
+
+eststo clear
+eststo Model1: reg demp nj, robust
+eststo Model2: reg demp $x, robust
+
+estout
+estout, cells(b(star fmt(3)) se(par fmt(2))) legend
+estout, cells(b(star fmt(3)) se(par fmt(2))) legend ///
+	stats(r2 N vce, labels("R-squared" "No. of obs.")) ///
+	varlabels(nj "New Jersey" bk "Burger King" kfc "KFC" ///
+	roy "Roy Rogers" co_owned "Company-owned" ///
+	_cons "Constant") varwidth(14)
+
+estout using "$path/results/results1.xls", ///
+	cells(b(star fmt(3)) se(par fmt(2))) ///
+	legend stats(r2 N vce, labels("R-squared" "No. of obs.")) ///
+	varlabels(nj "New Jersey" bk "Burger King" kfc "KFC" ///
+	roy "Roy Rogers" co_owned "Company-owned" ///
+	_cons "Constant") varwidth(14) replace
+
+estout using "$path/results/results1.txt", ///
+	cells(b(star fmt(3)) se(par fmt(2))) ///
+	legend stats(r2 N vce, labels("R-squared" "No. of obs.")) ///
+	varlabels(nj "New Jersey" bk "Burger King" kfc "KFC" ///
+	roy "Roy Rogers" co_owned "Company-owned" ///
+	_cons "Constant") varwidth(14) style(tex) replace
+	
+* ssc install outreg2, replace
+
+label var nj "New Jersey"	
+label var bk "Burger King"
+label var kfc "KFC"
+label var roy "Roy Rogers"
+label var co_owned "Company-owned"	
+
+outreg2 using "$path/results/Results4a.dta", replace ctitle(Model1) label: ///
+reg demp nj, robust
+
+outreg2 using "$path/results/Results4b.dta", replace ctitle(Model1) label: ///
+reg demp $x, robust
+
+preserve
+use "$path/results/Results4b.dta", clear
+export excel using Results4.xls, replace sheet("Model1")
+use "$path/results/Results4b.dta", clear
+export excel using Results4.xls, sheetreplace sheet("Model2")
+restore

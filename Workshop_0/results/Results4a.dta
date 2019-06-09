@@ -1,0 +1,12 @@
+		(1)
+VARIABLES	LABELS	Model1
+		
+nj	New Jersey	2.326
+		(1.452)
+Constant	Constant	-2.127
+		(1.372)
+		
+Observations		357
+R-squared		0.011
+Robust standard errors in parentheses		
+*** p<0.01, ** p<0.05, * p<0.1		

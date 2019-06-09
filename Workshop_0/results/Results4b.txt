@@ -1,0 +1,20 @@
+		(1)
+VARIABLES	LABELS	Model1
+		
+nj	New Jersey	2.304
+		(1.450)
+bk	Burger King	0.512
+		(1.634)
+kfc	KFC	1.004
+		(1.567)
+roy	Roy Rogers	-1.705
+		(1.621)
+co_owned	Company-owned	0.308
+		(0.911)
+Constant	Constant	-2.209
+		(1.828)
+		
+Observations		357
+R-squared		0.023
+Robust standard errors in parentheses		
+*** p<0.01, ** p<0.05, * p<0.1		
