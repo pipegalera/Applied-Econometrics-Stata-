@@ -4,7 +4,7 @@
 
 cls
 clear all
-capture log c
+cap log c
 global path "/Users/mac/GitHub/Applied-Econometrics-Stata-/Workshop_0"
 cd "$path"
 log using "$path/code/Workshop_1.log", replace

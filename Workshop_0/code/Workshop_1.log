@@ -1214,3 +1214,11 @@ r(111);
 
 . cls
 
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD02175.0000
+> 00"
+
+. cls
+
+. clear all
+
+. capture log c
