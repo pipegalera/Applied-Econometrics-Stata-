@@ -1,0 +1,38 @@
+	(1)
+VARIABLES	SLP
+	
+D_4	0.0416
+	(0.0707)
+D_3	-0.0526
+	(0.0867)
+D_2	-0.0429
+	(0.0783)
+D_1	-0.0312
+	(0.0653)
+D0	0.0697
+	(0.0700)
+D1	0.0859
+	(0.0669)
+D2	0.1391
+	(0.0830)
+D3	0.0295
+	(0.0778)
+D4	0.0812
+	(0.0639)
+D5	0.1416**
+	(0.0567)
+D6	0.0936*
+	(0.0518)
+D7	0.0922**
+	(0.0419)
+Constant	6.2549***
+	(0.0338)
+	
+Observations	850
+R-squared	0.9880
+State FE	YES
+Year FE	YES
+StateXt	YES
+Clustered err	YES
+Robust standard errors in parentheses	
+*** p<0.01, ** p<0.05, * p<0.1	

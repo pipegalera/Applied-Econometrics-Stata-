@@ -1,0 +1,2432 @@
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/mac/GitHub/Applied-Econometrics-Stata-/Workshop_4/code/Workshop_4.log
+  log type:  text
+ opened on:  15 Jun 2019, 11:58:35
+
+. set more off
+
+. 
+. ******************************************
+. *   Load data & labeling                 *
+. ******************************************
+. 
+. use "$path/raw_data/AngristKrueger1991.dta", clear
+
+. keep if yob>=1930 & yob<=1939 /*Reduce sample size*/
+(734,125 observations deleted)
+
+. lab var lnwklywge "log weekly earnings"
+
+. lab var educ "years of schooling"
+
+. lab var race "dummy for race"
+
+. lab var smsa "dummy for living in the center city"
+
+. lab var married "dummy for being married"
+
+. lab var yob "year of birth"
+
+. lab var qob "quarter of birth"
+
+. 
+. ******************************************
+. *   Simplest Regression                  *
+. ******************************************
+. 
+. * lnwages = B0 + B1_X + B2_educ + u
+. 
+. glo controls educ race smsa neweng midatl enocent wnocent soatl esocent wsocent mt
+
+. eststo ols_1: reg lnwklywge educ i.yob
+
+      Source |       SS           df       MS      Number of obs   =   329,509
+-------------+----------------------------------   F(10, 329498)   =   4397.45
+       Model |  17878.1586        10  1787.81586   Prob > F        =    0.0000
+    Residual |  133959.712   329,498  .406556981   R-squared       =    0.1177
+-------------+----------------------------------   Adj R-squared   =    0.1177
+       Total |  151837.871   329,508  .460801773   Root MSE        =    .63762
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |    .071081    .000339   209.67   0.000     .0704166    .0717455
+             |
+         yob |
+       1931  |  -.0063875   .0050393    -1.27   0.205    -.0162644    .0034895
+       1932  |  -.0148384   .0049724    -2.98   0.003    -.0245841   -.0050927
+       1933  |  -.0175832   .0050325    -3.49   0.000    -.0274468   -.0077195
+       1934  |  -.0209993   .0049845    -4.21   0.000    -.0307688   -.0112297
+       1935  |  -.0328947   .0049515    -6.64   0.000    -.0425994     -.02319
+       1936  |  -.0317808   .0049557    -6.41   0.000    -.0414937   -.0220678
+       1937  |  -.0367121   .0049082    -7.48   0.000    -.0463321   -.0270921
+       1938  |  -.0368905   .0048656    -7.58   0.000     -.046427   -.0273539
+       1939  |  -.0481636   .0048468    -9.94   0.000    -.0576633    -.038664
+             |
+       _cons |   5.017348   .0054706   917.14   0.000     5.006626    5.028071
+------------------------------------------------------------------------------
+
+. eststo ols_2: reg lnwklywge $controls i.yob
+
+      Source |       SS           df       MS      Number of obs   =   329,509
+-------------+----------------------------------   F(20, 329488)   =   2895.97
+       Model |   22700.522        20   1135.0261   Prob > F        =    0.0000
+    Residual |  129137.349   329,488   .39193339   R-squared       =    0.1495
+-------------+----------------------------------   Adj R-squared   =    0.1495
+       Total |  151837.871   329,508  .460801773   Root MSE        =    .62605
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0638867   .0003423   186.64   0.000     .0632158    .0645576
+        race |  -.2901038   .0040571   -71.51   0.000    -.2980555   -.2821521
+        smsa |  -.1697411   .0028908   -58.72   0.000    -.1754069   -.1640753
+      neweng |   -.103881   .0055617   -18.68   0.000    -.1147818   -.0929801
+      midatl |  -.0429599   .0041363   -10.39   0.000    -.0510669   -.0348529
+     enocent |   .0314646   .0039713     7.92   0.000     .0236811    .0392481
+     wnocent |  -.0910044   .0050457   -18.04   0.000    -.1008939   -.0811149
+       soatl |  -.1242245   .0041369   -30.03   0.000    -.1323327   -.1161163
+     esocent |  -.1445334   .0053693   -26.92   0.000    -.1550571   -.1340096
+     wsocent |  -.0844847   .0047071   -17.95   0.000    -.0937105   -.0752588
+          mt |  -.0808877   .0058412   -13.85   0.000    -.0923364   -.0694391
+             |
+         yob |
+       1931  |  -.0051945    .004948    -1.05   0.294    -.0148924    .0045034
+       1932  |  -.0091989   .0048825    -1.88   0.060    -.0187684    .0003706
+       1933  |  -.0104467   .0049419    -2.11   0.035    -.0201326   -.0007608
+       1934  |  -.0135046   .0048949    -2.76   0.006    -.0230985   -.0039108
+       1935  |  -.0234835   .0048627    -4.83   0.000    -.0330143   -.0139527
+       1936  |  -.0240834   .0048665    -4.95   0.000    -.0336217   -.0145452
+       1937  |   -.027653   .0048203    -5.74   0.000    -.0371006   -.0182055
+       1938  |  -.0274737   .0047787    -5.75   0.000    -.0368397   -.0181076
+       1939  |  -.0364788   .0047606    -7.66   0.000    -.0458095   -.0271481
+             |
+       _cons |   5.213645    .006474   805.33   0.000     5.200956    5.226334
+------------------------------------------------------------------------------
+
+. 
+. estout, cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+
+--------------------------------------------
+                    ols_1           ols_2   
+                     b/se            b/se   
+--------------------------------------------
+educ                0.071***        0.064***
+                   (0.00)          (0.00)   
+1930.yob            0.000           0.000   
+                      (.)             (.)   
+1931.yob           -0.006          -0.005   
+                   (0.01)          (0.00)   
+1932.yob           -0.015***       -0.009*  
+                   (0.00)          (0.00)   
+1933.yob           -0.018***       -0.010** 
+                   (0.01)          (0.00)   
+1934.yob           -0.021***       -0.014***
+                   (0.00)          (0.00)   
+1935.yob           -0.033***       -0.023***
+                   (0.00)          (0.00)   
+1936.yob           -0.032***       -0.024***
+                   (0.00)          (0.00)   
+1937.yob           -0.037***       -0.028***
+                   (0.00)          (0.00)   
+1938.yob           -0.037***       -0.027***
+                   (0.00)          (0.00)   
+1939.yob           -0.048***       -0.036***
+                   (0.00)          (0.00)   
+race                               -0.290***
+                                   (0.00)   
+smsa                               -0.170***
+                                   (0.00)   
+neweng                             -0.104***
+                                   (0.01)   
+midatl                             -0.043***
+                                   (0.00)   
+enocent                             0.031***
+                                   (0.00)   
+wnocent                            -0.091***
+                                   (0.01)   
+soatl                              -0.124***
+                                   (0.00)   
+esocent                            -0.145***
+                                   (0.01)   
+wsocent                            -0.084***
+                                   (0.00)   
+mt                                 -0.081***
+                                   (0.01)   
+_cons               5.017***        5.214***
+                   (0.01)          (0.01)   
+--------------------------------------------
+* p<0.10, ** p<0.05, *** p<0.01
+
+. estout using "results/Table1.xls", cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend replace
+(output written to results/Table1.xls)
+
+. 
+. /* With the most simple OLS regression, we find an estimate of the returns
+> to schooling of 7,1%, i.e. one more year of education increases the weekly
+> wage by 7,1%. Including more explanatory variables reduces the returns to 
+> education to 6,3%.
+> 
+> Problems: Endogeneity.
+> Education may be correlated with omitted variables in the error term. Two 
+> candidates of such omitted variables are ability and motivation: More able or 
+> motivated persons are more likely to have higher schooling levels and earn 
+> higher wages.
+> 
+> This implies that OLS is biased and inconsistent and in labor economics this
+> is often referred to as ability bias. What is the direction of the bias? 
+> Ability bias will imply that OLS estimate of returns to education is higher 
+> than the true returns. 
+> 
+> We need an instrument: In the US, most states require students to enter school
+> in the calendar year they turn 6 years. The ones that had born the December 31
+> and the 1 of January they are same aged byt the sencond will enter school 1 year
+> later. Given that compulsory schooling laws typically require that students 
+> remain in school until their 16th birthday, the second had to be in school also
+> 1 year less.*/
+. 
+. ******************************************
+. *   Graphs                               *
+. ******************************************
+. 
+. * First stage: quarter of birth vs average years of schooling
+. 
+. gen quarter = yob + (qob/10) /*ordering by year of born, including quarters*/
+
+. 
+. bysort quarter: egen educ_qm      = mean(educ)
+
+. *gr tw connected educ_qm quarter, mlabel(qob) xlabel(, format(%4.0f))
+. *gr export "graphs/fig1.eps", replace
+. 
+. /*It shows a saw-toothed relationship between quarter of birth and the average 
+> years of schooling. The difference in educational levels between individuals 
+> born in di¤erent quarters is fairly small, but there seems to be a distinct 
+> pattern that individuals born in 3rd and 4th quarter have higher educational 
+> levels.*/
+. 
+. * Reduced-form relationship: quarter of birth vs average log weekly earnings
+. bysort quarter: egen lnwklywge_qm = mean(lnwklywge)
+
+. *gr tw connected lnwklywge_qm quarter, mlabel(qob) xlabel(, format(%4.0f))
+. *gr export "graphs/fig2.eps", replace
+. 
+. /*We find a similar saw-toothed relationship reduced-form relationship. It is
+> important to notice that the weakly earnings are not trending much over the 
+> birth cohorts 1930-1939.
+> 
+> Acording to educational psycologist research, the consensus seems to be that 
+> students starting at an older age are more mature and perform better in school.
+> If this unobserved ability is also rewarded in the labor market, this would 
+> imply that individuals born in the fist quarter of the year earn more. Hence, 
+> this effect will bias the estimate of the returns to schooling downwards. */
+. 
+. ******************************************
+. *   Evaluation of levels of education    *
+. ******************************************
+. 
+. * High school graduate (12 years or more)
+. bysort educ: gen educ_hs = (educ>=12)
+
+. 
+. * College graduate (16 years or more)
+. bysort educ: gen educ_cl = (educ>=16)
+
+. 
+. * Doctor graduate (20 years or more)
+. bysort educ: gen educ_phd = (educ>=20)
+
+. 
+. * At which education level quarters of birth have most effect
+. 
+. eststo clear
+
+. eststo ols_all: reg educ         i.qob i.yob, r
+
+Linear regression                               Number of obs     =    329,509
+                                                F(12, 329496)     =      86.27
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0031
+                                                Root MSE          =     3.2761
+
+------------------------------------------------------------------------------
+             |               Robust
+        educ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         qob |
+          2  |   .0566804   .0164787     3.44   0.001     .0243826    .0889782
+          3  |   .1128366   .0159686     7.07   0.000     .0815387    .1441345
+          4  |   .1484963   .0162145     9.16   0.000     .1167163    .1802763
+             |
+         yob |
+       1931  |   .1383144    .026918     5.14   0.000      .085556    .1910729
+       1932  |   .1770326   .0266335     6.65   0.000     .1248316    .2292335
+       1933  |    .233588   .0267711     8.73   0.000     .1811173    .2860586
+       1934  |   .2637372   .0263715    10.00   0.000     .2120498    .3154247
+       1935  |   .3278824   .0259926    12.61   0.000     .2769377    .3788271
+       1936  |   .3867054   .0257646    15.01   0.000     .3362075    .4372034
+       1937  |   .4477307   .0254289    17.61   0.000     .3978907    .4975706
+       1938  |   .5343777   .0251467    21.25   0.000     .4850909    .5836646
+       1939  |   .5730867   .0249814    22.94   0.000     .5241238    .6220495
+             |
+       _cons |   12.37595   .0212379   582.73   0.000     12.33433    12.41758
+------------------------------------------------------------------------------
+
+. eststo ols_hs:  reg educ_hs  i.qob i.yob, r
+
+Linear regression                               Number of obs     =    329,509
+                                                F(12, 329496)     =     111.06
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0040
+                                                Root MSE          =     .41926
+
+------------------------------------------------------------------------------
+             |               Robust
+     educ_hs |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         qob |
+          2  |   .0016863   .0021117     0.80   0.425    -.0024526    .0058251
+          3  |   .0144365   .0020502     7.04   0.000     .0104181    .0184549
+          4  |   .0197029   .0020775     9.48   0.000     .0156311    .0237747
+             |
+         yob |
+       1931  |   .0199543   .0034698     5.75   0.000     .0131536     .026755
+       1932  |   .0192067   .0034261     5.61   0.000     .0124916    .0259218
+       1933  |   .0258542   .0034511     7.49   0.000     .0190902    .0326183
+       1934  |   .0315345   .0034047     9.26   0.000     .0248613    .0382076
+       1935  |    .046264   .0033471    13.82   0.000     .0397038    .0528242
+       1936  |   .0570342   .0033218    17.17   0.000     .0505236    .0635448
+       1937  |   .0663076   .0032678    20.29   0.000     .0599028    .0727124
+       1938  |   .0750033   .0032192    23.30   0.000     .0686939    .0813128
+       1939  |   .0759647    .003205    23.70   0.000      .069683    .0822464
+             |
+       _cons |   .7195271   .0027493   261.71   0.000     .7141385    .7249157
+------------------------------------------------------------------------------
+
+. eststo ols_cl:  reg educ_cl  i.qob i.yob, r
+
+Linear regression                               Number of obs     =    329,509
+                                                F(12, 329496)     =       8.73
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0003
+                                                Root MSE          =     .42359
+
+------------------------------------------------------------------------------
+             |               Robust
+     educ_cl |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         qob |
+          2  |   .0080802   .0021003     3.85   0.000     .0039637    .0121968
+          3  |   .0072923   .0020579     3.54   0.000     .0032589    .0113257
+          4  |   .0079825   .0020957     3.81   0.000     .0038749      .01209
+             |
+         yob |
+       1931  |   .0086323   .0032969     2.62   0.009     .0021704    .0150942
+       1932  |   .0133975   .0032644     4.10   0.000     .0069993    .0197956
+       1933  |   .0182082   .0033173     5.49   0.000     .0117064    .0247101
+       1934  |   .0154918    .003278     4.73   0.000      .009067    .0219166
+       1935  |   .0136391   .0032508     4.20   0.000     .0072677    .0200105
+       1936  |   .0132809   .0032521     4.08   0.000      .006907    .0196549
+       1937  |   .0141366   .0032224     4.39   0.000     .0078207    .0204525
+       1938  |   .0216322   .0032104     6.74   0.000       .01534    .0279245
+       1939  |   .0253273   .0032058     7.90   0.000     .0190441    .0316106
+             |
+       _cons |    .214094   .0025817    82.93   0.000     .2090339     .219154
+------------------------------------------------------------------------------
+
+. eststo ols_phd: reg educ_phd i.qob i.yob, r
+
+Linear regression                               Number of obs     =    329,509
+                                                F(12, 329496)     =       3.10
+                                                Prob > F          =     0.0002
+                                                R-squared         =     0.0001
+                                                Root MSE          =     .18337
+
+------------------------------------------------------------------------------
+             |               Robust
+    educ_phd |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         qob |
+          2  |   .0015685   .0009169     1.71   0.087    -.0002287    .0033656
+          3  |  -.0000836   .0008889    -0.09   0.925    -.0018259    .0016586
+          4  |  -.0000388   .0009051    -0.04   0.966    -.0018127    .0017352
+             |
+         yob |
+       1931  |   6.67e-06   .0014088     0.00   0.996    -.0027546     .002768
+       1932  |   .0005641   .0013956     0.40   0.686    -.0021713    .0032995
+       1933  |   .0001246   .0014081     0.09   0.929    -.0026352    .0028844
+       1934  |   .0021941   .0014161     1.55   0.121    -.0005814    .0049696
+       1935  |   .0013291   .0013974     0.95   0.342    -.0014099     .004068
+       1936  |   .0017071   .0014023     1.22   0.223    -.0010414    .0044556
+       1937  |   .0037229   .0014082     2.64   0.008     .0009629    .0064829
+       1938  |    .005487   .0014115     3.89   0.000     .0027205    .0082534
+       1939  |   .0040841   .0013924     2.93   0.003     .0013549    .0068133
+             |
+       _cons |   .0324943    .001105    29.41   0.000     .0303286    .0346601
+------------------------------------------------------------------------------
+
+. 
+. estout, cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+
+----------------------------------------------------------------------------
+                  ols_all          ols_hs          ols_cl         ols_phd   
+                     b/se            b/se            b/se            b/se   
+----------------------------------------------------------------------------
+1.qob               0.000           0.000           0.000           0.000   
+                      (.)             (.)             (.)             (.)   
+2.qob               0.057***        0.002           0.008***        0.002*  
+                   (0.02)          (0.00)          (0.00)          (0.00)   
+3.qob               0.113***        0.014***        0.007***       -0.000   
+                   (0.02)          (0.00)          (0.00)          (0.00)   
+4.qob               0.148***        0.020***        0.008***       -0.000   
+                   (0.02)          (0.00)          (0.00)          (0.00)   
+1930.yob            0.000           0.000           0.000           0.000   
+                      (.)             (.)             (.)             (.)   
+1931.yob            0.138***        0.020***        0.009***        0.000   
+                   (0.03)          (0.00)          (0.00)          (0.00)   
+1932.yob            0.177***        0.019***        0.013***        0.001   
+                   (0.03)          (0.00)          (0.00)          (0.00)   
+1933.yob            0.234***        0.026***        0.018***        0.000   
+                   (0.03)          (0.00)          (0.00)          (0.00)   
+1934.yob            0.264***        0.032***        0.015***        0.002   
+                   (0.03)          (0.00)          (0.00)          (0.00)   
+1935.yob            0.328***        0.046***        0.014***        0.001   
+                   (0.03)          (0.00)          (0.00)          (0.00)   
+1936.yob            0.387***        0.057***        0.013***        0.002   
+                   (0.03)          (0.00)          (0.00)          (0.00)   
+1937.yob            0.448***        0.066***        0.014***        0.004***
+                   (0.03)          (0.00)          (0.00)          (0.00)   
+1938.yob            0.534***        0.075***        0.022***        0.005***
+                   (0.03)          (0.00)          (0.00)          (0.00)   
+1939.yob            0.573***        0.076***        0.025***        0.004***
+                   (0.02)          (0.00)          (0.00)          (0.00)   
+_cons              12.376***        0.720***        0.214***        0.032***
+                   (0.02)          (0.00)          (0.00)          (0.00)   
+----------------------------------------------------------------------------
+* p<0.10, ** p<0.05, *** p<0.01
+
+. estout using "results/Table2.xls", cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend replace
+(output written to results/Table2.xls)
+
+. 
+. /* We only see a distinct pattern for all levels of education and for the
+> proportion of high school graduates, which they are increasing in quarter
+> of birth. */
+. 
+. ******************************************
+. *   Creating the Wald estimator          *
+. ******************************************
+. 
+. *Instrumenting the first quarter
+. gen Z = 0
+
+. replace Z = 1 if qob==1
+(81,671 real changes made)
+
+. 
+. ttest lnwklywge, by(Z) unequal  /*E(Y|Z=0) = 5.903; E(Y|Z=1) =  5.890*/
+
+Two-sample t test with unequal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+       0 | 247,838    5.902695    .0013621    .6781127    5.900025    5.905365
+       1 |  81,671    5.891596    .0023826    .6809133    5.886926    5.896266
+---------+--------------------------------------------------------------------
+combined | 329,509    5.899944    .0011826    .6788238    5.897626    5.902262
+---------+--------------------------------------------------------------------
+    diff |            .0110989    .0027445                .0057197    .0164781
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   4.0440
+Ho: diff = 0                     Satterthwaite's degrees of freedom =   138889
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0001          Pr(T > t) = 0.0000
+
+. return list /*r(mu_2);  r(mu_1)*/
+
+scalars:
+              r(level) =  95
+                 r(sd) =  .6788238162341906
+               r(sd_2) =  .6809133453103164
+               r(sd_1) =  .6781126994894493
+                 r(se) =  .002744513175311
+                r(p_u) =  .0000262846990106
+                r(p_l) =  .9999737153009894
+                  r(p) =  .0000525693980212
+                  r(t) =  4.044026095243026
+               r(df_t) =  138889.093786181
+               r(mu_2) =  5.8915958938452
+                r(N_2) =  81671
+               r(mu_1) =  5.902694776744896
+                r(N_1) =  247838
+
+. scalar Y_diff = r(mu_2)-r(mu_1)
+
+. ttest educ, by(Z) unequal /*E(S|Z=0) = 12.797; E(S|Z=1) = 12.688*/
+
+Two-sample t test with unequal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+       0 | 247,838    12.79688    .0065711    3.271337      12.784    12.80976
+       1 |  81,671    12.68807    .0115816    3.309801    12.66537    12.71077
+---------+--------------------------------------------------------------------
+combined | 329,509    12.76991    .0057162    3.281244    12.75871    12.78112
+---------+--------------------------------------------------------------------
+    diff |            .1088179    .0133159                 .082719    .1349168
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   8.1720
+Ho: diff = 0                     Satterthwaite's degrees of freedom =   138003
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+. return list
+
+scalars:
+              r(level) =  95
+                 r(sd) =  3.281243671784521
+               r(sd_2) =  3.309801106661525
+               r(sd_1) =  3.271336587224873
+                 r(se) =  .0133158957662407
+                r(p_u) =  1.52886200548e-16
+                r(p_l) =  .9999999999999999
+                  r(p) =  3.05772401096e-16
+                  r(t) =  8.172031288948917
+               r(df_t) =  138003.0736823478
+               r(mu_2) =  12.68806553121671
+                r(N_2) =  81671
+               r(mu_1) =  12.79688344805881
+                r(N_1) =  247838
+
+. scalar S_diff = r(mu_2)-r(mu_1)
+
+. scalar Wald_estimator = Y_diff/S_diff
+
+. mat WE=[Y_diff\S_diff\Wald_estimator] 
+
+. 
+. frmttable using "results/Table3", statmat(WE) sdec(3) title("Wald estimate") ///
+>                rtitle("E(Y|Z=1)-E(Y|Z=0)"\"E(S|Z=1)-E(S|Z=0)"\"Wald estimate") replace
+
+                                                                    Wald estimate
+                                                            -----------------------------
+                                                             E(Y|Z=1)-E(Y|Z=0)   -0.011 
+                                                             E(S|Z=1)-E(S|Z=0)   -0.109 
+                                                             Wald estimate       0.102  
+                                                            -----------------------------
+
+
+. 
+. * Wald estimator using heteroscedasticity-robust standard errors. Same 10,2%
+. 
+. ivregress 2sls lnwklywge (educ=Z), r
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(1)    =      18.01
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.0946
+                                                  Root MSE        =     .64591
+
+------------------------------------------------------------------------------
+             |               Robust
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |    .101995   .0240315     4.24   0.000     .0548941    .1490959
+       _cons |   4.597477    .306889    14.98   0.000     3.995985    5.198968
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   Z
+
+. 
+. /*This implies that increasing education by one year increases the wage by
+> 10,2%. Hence, we actually find a higher estimate using an instrument to
+> take account of the endogeneity even though we thought the OLS estimate
+> was already upward-biased. Why?
+> 
+> We only estimate the local average treatment effects (LATE) and the compliers 
+> have higher returns to additional schooling. The hypothesis is that the 
+> compliers have higher discount rates*/
+. 
+. ******************************************
+. *   Compliers                            *
+. ******************************************
+. 
+. * The share of compliers
+. gen qtr34 = 0
+
+. replace qtr34 = 1 if qob>=3 /*Z*/
+(167,700 real changes made)
+
+. ttest educ_hs, by(qtr34) /*P(compliers) = E(D|Z=1) - E(D|Z=0) = */
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+       0 | 161,809    .7626523    .0010577    .4254585    .7605792    .7647253
+       1 | 167,700    .7793262    .0010127    .4147022    .7773414     .781311
+---------+--------------------------------------------------------------------
+combined | 329,509    .7711383    .0007318    .4201007    .7697039    .7725727
+---------+--------------------------------------------------------------------
+    diff |           -.0166739    .0014636               -.0195426   -.0138052
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t = -11.3921
+Ho: diff = 0                                     degrees of freedom =   329507
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 1.0000
+
+. return list /* People in the qrt 3 and 4 have more education */
+
+scalars:
+              r(level) =  95
+                 r(sd) =  .4201006718451126
+               r(sd_2) =  .4147021967168586
+               r(sd_1) =  .4254584674360878
+                 r(se) =  .0014636400969161
+                r(p_u) =  1
+                r(p_l) =  2.31934582578e-30
+                  r(p) =  4.63869165156e-30
+                  r(t) =  -11.39208667505447
+               r(df_t) =  329507
+               r(mu_2) =  .7793261776982707
+                r(N_2) =  167700
+               r(mu_1) =  .7626522628531169
+                r(N_1) =  161809
+
+. scalar D_Z_0 = r(mu_1) 
+
+. scalar D_Z_1 = r(mu_2) 
+
+. scalar compliers_share = D_Z_1 - D_Z_0
+
+. 
+. /* We see that the share of compliers is low so there is no reason to believe
+> that LATE is close to ATE. */
+. 
+. * The share of compliers among treated
+. /*P(compliers| D=1) = P(compliers)*P(D=1|compliers)/ P(D=1) 
+>                                         = compliers_share* P(Z=1) / P(D=1)*/
+.                                         
+. su qtr
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       qtr34 |    329,509    .5089391    .4999208          0          1
+
+. scalar prob_Z = r(mean)
+
+. su educ_hs
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     educ_hs |    329,509    .7711383    .4201007          0          1
+
+. scalar prob_D = r(mean)
+
+. scalar compliers_among_treated = (compliers_share*prob_Z) / prob_D
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. scalar compliers_among_nontreated = (compliers_share*(1-prob_Z)) / (1-prob_D)
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. ttest educ_hs, by(qtr34) if race ==1                    
+option if not allowed
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. ttest educ_hs if race ==1, by(qtr34)            
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+       0 |  13,516    .5605209    .0042693    .4963421    .5521524    .5688893
+       1 |  13,397    .5843846     .004258    .4928462    .5760382    .5927309
+---------+--------------------------------------------------------------------
+combined |  26,913       .5724    .0030158    .4947397    .5664889     .578311
+---------+--------------------------------------------------------------------
+    diff |           -.0238637    .0060299               -.0356827   -.0120447
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -3.9575
+Ho: diff = 0                                     degrees of freedom =    26911
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0001          Pr(T > t) = 1.0000
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. scalar compliers_share_among_black = r(mu_2) - r(mu_1) 
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. 
+. ttest educ_hs if race ==1, by(qtr34)            
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+       0 |  13,516    .5605209    .0042693    .4963421    .5521524    .5688893
+       1 |  13,397    .5843846     .004258    .4928462    .5760382    .5927309
+---------+--------------------------------------------------------------------
+combined |  26,913       .5724    .0030158    .4947397    .5664889     .578311
+---------+--------------------------------------------------------------------
+    diff |           -.0238637    .0060299               -.0356827   -.0120447
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -3.9575
+Ho: diff = 0                                     degrees of freedom =    26911
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0001          Pr(T > t) = 1.0000
+
+. scalar compliers_share_among_black = r(mu_2) - r(mu_1) 
+
+.                                 
+.                                         
+. mat tab = [D_Z_0\D_Z_1\compliers_share\compliers_among_treated ///
+>                    \compliers_among_nontreated\compliers_share_among_black]
+
+. frmttable, statmat(tab) sdec(3) title("Characterizing compliers") ///
+>                rtitle("E(D|Z=0)"\"E(D|Z=1)"\"Share of compliers"\"Share of compliers among treated" ///
+>                          \"Share of compliers among non-treated"\"Share of compliers among blacks")
+
+                                                              Characterizing compliers
+                                                   -----------------------------------------------
+                                                    E(D|Z=0)                               0.763 
+                                                    E(D|Z=1)                               0.779 
+                                                    Share of compliers                     0.017 
+                                                    Share of compliers among treated       0.011 
+                                                    Share of compliers among non-treated   0.036 
+                                                    Share of compliers among blacks        0.024 
+                                                   -----------------------------------------------
+
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. frmttable using "results/Table4", statmat(tab) sdec(3) title("Characterizing compliers") ///
+>                rtitle("E(D|Z=0)"\"E(D|Z=1)"\"Share of compliers"\"Share of compliers among treated" ///
+>                          \"Share of compliers among non-treated"\"Share of compliers among blacks")
+
+                                                              Characterizing compliers
+                                                   -----------------------------------------------
+                                                    E(D|Z=0)                               0.763 
+                                                    E(D|Z=1)                               0.779 
+                                                    Share of compliers                     0.017 
+                                                    Share of compliers among treated       0.011 
+                                                    Share of compliers among non-treated   0.036 
+                                                    Share of compliers among blacks        0.024 
+                                                   -----------------------------------------------
+
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. eststo clear
+
+. eststo 2SLS_1: ivregress 2sls lnwklywge                   i.yob (educ=Z)
+2SLS_1 invalid name
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. eststo clear
+
+. eststo twostage_1: ivregress 2sls lnwklywge               i.yob (educ=Z)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      29.07
+                                                  Prob > chi2     =     0.0012
+                                                  R-squared       =     0.0912
+                                                  Root MSE        =     .64714
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1048562   .0245629     4.27   0.000     .0567138    .1529987
+             |
+         yob |
+       1931  |   -.011058   .0061395    -1.80   0.072    -.0230913    .0009753
+       1932  |  -.0208163   .0066607    -3.13   0.002    -.0338711   -.0077616
+       1933  |  -.0254722    .007681    -3.32   0.001    -.0405267   -.0104176
+       1934  |  -.0299673   .0082536    -3.63   0.000     -.046144   -.0137906
+       1935  |  -.0440057    .009515    -4.62   0.000    -.0626548   -.0253566
+       1936  |  -.0448547   .0107555    -4.17   0.000    -.0659352   -.0237742
+       1937  |   -.051892   .0121104    -4.28   0.000     -.075628    -.028156
+       1938  |  -.0549726   .0140456    -3.91   0.000    -.0825015   -.0274436
+       1939  |  -.0675725   .0149464    -4.52   0.000    -.0968669   -.0382781
+             |
+       _cons |   4.596673   .3059553    15.02   0.000     3.997012    5.196335
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob Z
+
+. eststo twostage_2: ivregress 2sls lnwklywge $controls i.yob (educ=Z)
+educ included in both exogenous and endogenous variable lists
+r(498);
+
+end of do-file
+
+r(498);
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. eststo twostage_3: ivregress 2sls lnwklywge               i.yob (educ=qtr34)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      38.32
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.0661
+                                                  Root MSE        =       .656
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1181564   .0224234     5.27   0.000     .0742073    .1621054
+             |
+         yob |
+       1931  |  -.0128972   .0060409    -2.13   0.033    -.0247371   -.0010572
+       1932  |  -.0231704   .0064744    -3.58   0.000      -.03586   -.0104808
+       1933  |  -.0285787   .0073643    -3.88   0.000    -.0430125    -.014145
+       1934  |  -.0334988   .0078574    -4.26   0.000     -.048899   -.0180985
+       1935  |   -.048381   .0089639    -5.40   0.000      -.06595    -.030812
+       1936  |   -.050003   .0100656    -4.97   0.000    -.0697312   -.0302749
+       1937  |  -.0578695   .0112712    -5.13   0.000    -.0799607   -.0357784
+       1938  |   -.062093   .0130053    -4.77   0.000    -.0875829   -.0366031
+       1939  |  -.0752154   .0138154    -5.44   0.000     -.102293   -.0481378
+             |
+       _cons |   4.431018   .2793098    15.86   0.000     3.883581    4.978455
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob qtr34
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. glo controls race smsa neweng midatl enocent wnocent soatl esocent wsocent mt
+
+. eststo ols_1: reg lnwklywge educ                   i.yob
+
+      Source |       SS           df       MS      Number of obs   =   329,509
+-------------+----------------------------------   F(10, 329498)   =   4397.45
+       Model |  17878.1586        10  1787.81586   Prob > F        =    0.0000
+    Residual |  133959.712   329,498  .406556981   R-squared       =    0.1177
+-------------+----------------------------------   Adj R-squared   =    0.1177
+       Total |  151837.871   329,508  .460801773   Root MSE        =    .63762
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |    .071081    .000339   209.67   0.000     .0704166    .0717455
+             |
+         yob |
+       1931  |  -.0063875   .0050393    -1.27   0.205    -.0162644    .0034895
+       1932  |  -.0148384   .0049724    -2.98   0.003    -.0245841   -.0050927
+       1933  |  -.0175832   .0050325    -3.49   0.000    -.0274468   -.0077195
+       1934  |  -.0209993   .0049845    -4.21   0.000    -.0307688   -.0112297
+       1935  |  -.0328947   .0049515    -6.64   0.000    -.0425994     -.02319
+       1936  |  -.0317808   .0049557    -6.41   0.000    -.0414937   -.0220678
+       1937  |  -.0367121   .0049082    -7.48   0.000    -.0463321   -.0270921
+       1938  |  -.0368905   .0048656    -7.58   0.000     -.046427   -.0273539
+       1939  |  -.0481636   .0048468    -9.94   0.000    -.0576633    -.038664
+             |
+       _cons |   5.017348   .0054706   917.14   0.000     5.006626    5.028071
+------------------------------------------------------------------------------
+
+. eststo ols_2: reg lnwklywge educ $controls i.yob
+
+      Source |       SS           df       MS      Number of obs   =   329,509
+-------------+----------------------------------   F(20, 329488)   =   2895.97
+       Model |   22700.522        20   1135.0261   Prob > F        =    0.0000
+    Residual |  129137.349   329,488   .39193339   R-squared       =    0.1495
+-------------+----------------------------------   Adj R-squared   =    0.1495
+       Total |  151837.871   329,508  .460801773   Root MSE        =    .62605
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0638867   .0003423   186.64   0.000     .0632158    .0645576
+        race |  -.2901038   .0040571   -71.51   0.000    -.2980555   -.2821521
+        smsa |  -.1697411   .0028908   -58.72   0.000    -.1754069   -.1640753
+      neweng |   -.103881   .0055617   -18.68   0.000    -.1147818   -.0929801
+      midatl |  -.0429599   .0041363   -10.39   0.000    -.0510669   -.0348529
+     enocent |   .0314646   .0039713     7.92   0.000     .0236811    .0392481
+     wnocent |  -.0910044   .0050457   -18.04   0.000    -.1008939   -.0811149
+       soatl |  -.1242245   .0041369   -30.03   0.000    -.1323327   -.1161163
+     esocent |  -.1445334   .0053693   -26.92   0.000    -.1550571   -.1340096
+     wsocent |  -.0844847   .0047071   -17.95   0.000    -.0937105   -.0752588
+          mt |  -.0808877   .0058412   -13.85   0.000    -.0923364   -.0694391
+             |
+         yob |
+       1931  |  -.0051945    .004948    -1.05   0.294    -.0148924    .0045034
+       1932  |  -.0091989   .0048825    -1.88   0.060    -.0187684    .0003706
+       1933  |  -.0104467   .0049419    -2.11   0.035    -.0201326   -.0007608
+       1934  |  -.0135046   .0048949    -2.76   0.006    -.0230985   -.0039108
+       1935  |  -.0234835   .0048627    -4.83   0.000    -.0330143   -.0139527
+       1936  |  -.0240834   .0048665    -4.95   0.000    -.0336217   -.0145452
+       1937  |   -.027653   .0048203    -5.74   0.000    -.0371006   -.0182055
+       1938  |  -.0274737   .0047787    -5.75   0.000    -.0368397   -.0181076
+       1939  |  -.0364788   .0047606    -7.66   0.000    -.0458095   -.0271481
+             |
+       _cons |   5.213645    .006474   805.33   0.000     5.200956    5.226334
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. eststo clear
+
+. eststo twostage_1: ivregress 2sls lnwklywge               i.yob (educ=Z)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      29.07
+                                                  Prob > chi2     =     0.0012
+                                                  R-squared       =     0.0912
+                                                  Root MSE        =     .64714
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1048562   .0245629     4.27   0.000     .0567138    .1529987
+             |
+         yob |
+       1931  |   -.011058   .0061395    -1.80   0.072    -.0230913    .0009753
+       1932  |  -.0208163   .0066607    -3.13   0.002    -.0338711   -.0077616
+       1933  |  -.0254722    .007681    -3.32   0.001    -.0405267   -.0104176
+       1934  |  -.0299673   .0082536    -3.63   0.000     -.046144   -.0137906
+       1935  |  -.0440057    .009515    -4.62   0.000    -.0626548   -.0253566
+       1936  |  -.0448547   .0107555    -4.17   0.000    -.0659352   -.0237742
+       1937  |   -.051892   .0121104    -4.28   0.000     -.075628    -.028156
+       1938  |  -.0549726   .0140456    -3.91   0.000    -.0825015   -.0274436
+       1939  |  -.0675725   .0149464    -4.52   0.000    -.0968669   -.0382781
+             |
+       _cons |   4.596673   .3059553    15.02   0.000     3.997012    5.196335
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob Z
+
+. eststo twostage_2: ivregress 2sls lnwklywge $controls i.yob (educ=Z)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(20)   =   22523.74
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1277
+                                                  Root MSE        =     .63399
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0953316    .026065     3.66   0.000     .0442452    .1464181
+        race |  -.2396011   .0420596    -5.70   0.000    -.3220363   -.1571659
+        smsa |  -.1369237   .0273573    -5.01   0.000    -.1905429   -.0833044
+      neweng |   -.085943   .0158987    -5.41   0.000    -.1171039    -.054782
+      midatl |  -.0217723   .0180537    -1.21   0.228    -.0571568    .0136123
+     enocent |   .0644242   .0276125     2.33   0.020     .0103047    .1185436
+     wnocent |  -.0683578   .0194533    -3.51   0.000    -.1064857   -.0302299
+       soatl |  -.0901175   .0285778    -3.15   0.002    -.1461289   -.0341062
+     esocent |  -.0924728   .0434909    -2.13   0.033    -.1777133   -.0072322
+     wsocent |  -.0551799   .0247521    -2.23   0.026    -.1036932   -.0066666
+          mt |  -.0736877   .0084026    -8.77   0.000    -.0901566   -.0572189
+             |
+         yob |
+       1931  |   -.009595   .0061977    -1.55   0.122    -.0217423    .0025522
+       1932  |  -.0152885   .0070656    -2.16   0.030    -.0291367   -.0014402
+       1933  |  -.0185557   .0083796    -2.21   0.027    -.0349795   -.0021319
+       1934  |  -.0226229   .0090382    -2.50   0.012    -.0403375   -.0049084
+       1935  |  -.0349808   .0107265    -3.26   0.001    -.0560043   -.0139572
+       1936  |  -.0369694   .0117626    -3.14   0.002    -.0600236   -.0139152
+       1937  |  -.0426365   .0133437    -3.20   0.001    -.0687898   -.0164833
+       1938  |   -.045119   .0154049    -2.93   0.003     -.075312   -.0149259
+       1939  |  -.0555912   .0165584    -3.36   0.001    -.0880449   -.0231374
+             |
+       _cons |   4.787252   .3534705    13.54   0.000     4.094462    5.480041
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   race smsa neweng midatl enocent wnocent soatl esocent wsocent
+               mt 1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob Z
+
+. eststo twostage_3: ivregress 2sls lnwklywge               i.yob (educ=qtr34)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      38.32
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.0661
+                                                  Root MSE        =       .656
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1181564   .0224234     5.27   0.000     .0742073    .1621054
+             |
+         yob |
+       1931  |  -.0128972   .0060409    -2.13   0.033    -.0247371   -.0010572
+       1932  |  -.0231704   .0064744    -3.58   0.000      -.03586   -.0104808
+       1933  |  -.0285787   .0073643    -3.88   0.000    -.0430125    -.014145
+       1934  |  -.0334988   .0078574    -4.26   0.000     -.048899   -.0180985
+       1935  |   -.048381   .0089639    -5.40   0.000      -.06595    -.030812
+       1936  |   -.050003   .0100656    -4.97   0.000    -.0697312   -.0302749
+       1937  |  -.0578695   .0112712    -5.13   0.000    -.0799607   -.0357784
+       1938  |   -.062093   .0130053    -4.77   0.000    -.0875829   -.0366031
+       1939  |  -.0752154   .0138154    -5.44   0.000     -.102293   -.0481378
+             |
+       _cons |   4.431018   .2793098    15.86   0.000     3.883581    4.978455
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob qtr34
+
+. eststo twostage_4: ivregress 2sls lnwklywge $controls i.yob (educ=qtr34)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(20)   =   21841.81
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1001
+                                                  Root MSE        =     .64395
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1112458   .0234343     4.75   0.000     .0653154    .1571761
+        race |  -.2140419   .0378635    -5.65   0.000    -.2882529   -.1398309
+        smsa |   -.120315   .0246344    -4.88   0.000    -.1685976   -.0720324
+      neweng |  -.0768646   .0145395    -5.29   0.000    -.1053616   -.0483677
+      midatl |  -.0110493   .0163515    -0.68   0.499    -.0430976     .020999
+     enocent |   .0811048   .0248976     3.26   0.001     .0323064    .1299033
+     wnocent |  -.0568965   .0176555    -3.22   0.001    -.0915006   -.0222924
+       soatl |  -.0728562    .025769    -2.83   0.005    -.1233625   -.0223498
+     esocent |  -.0661251   .0391848    -1.69   0.092     -.142926    .0106757
+     wsocent |  -.0403489   .0223672    -1.80   0.071    -.0841878    .0034899
+          mt |  -.0700438   .0080551    -8.70   0.000    -.0858316   -.0542561
+             |
+         yob |
+       1931  |  -.0118221   .0060544    -1.95   0.051    -.0236886    .0000443
+       1932  |  -.0183704   .0067685    -2.71   0.007    -.0316364   -.0051043
+       1933  |  -.0226596   .0078963    -2.87   0.004    -.0381361   -.0071832
+       1934  |  -.0272377   .0084568    -3.22   0.001    -.0438127   -.0106627
+       1935  |  -.0407995   .0099206    -4.11   0.000    -.0602434   -.0213555
+       1936  |   -.043491   .0108286    -4.02   0.000    -.0647147   -.0222672
+       1937  |  -.0502196   .0122165    -4.11   0.000    -.0741635   -.0262756
+       1938  |  -.0540492   .0140374    -3.85   0.000    -.0815619   -.0265365
+       1939  |  -.0652638   .0150602    -4.33   0.000    -.0947812   -.0357465
+             |
+       _cons |   4.571456   .3178027    14.38   0.000     3.948574    5.194338
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   race smsa neweng midatl enocent wnocent soatl esocent wsocent
+               mt 1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob qtr34
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. eststo clear
+
+. eststo twostage_1: ivregress 2sls lnwklywge               i.yob (educ=Z)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      29.07
+                                                  Prob > chi2     =     0.0012
+                                                  R-squared       =     0.0912
+                                                  Root MSE        =     .64714
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1048562   .0245629     4.27   0.000     .0567138    .1529987
+             |
+         yob |
+       1931  |   -.011058   .0061395    -1.80   0.072    -.0230913    .0009753
+       1932  |  -.0208163   .0066607    -3.13   0.002    -.0338711   -.0077616
+       1933  |  -.0254722    .007681    -3.32   0.001    -.0405267   -.0104176
+       1934  |  -.0299673   .0082536    -3.63   0.000     -.046144   -.0137906
+       1935  |  -.0440057    .009515    -4.62   0.000    -.0626548   -.0253566
+       1936  |  -.0448547   .0107555    -4.17   0.000    -.0659352   -.0237742
+       1937  |   -.051892   .0121104    -4.28   0.000     -.075628    -.028156
+       1938  |  -.0549726   .0140456    -3.91   0.000    -.0825015   -.0274436
+       1939  |  -.0675725   .0149464    -4.52   0.000    -.0968669   -.0382781
+             |
+       _cons |   4.596673   .3059553    15.02   0.000     3.997012    5.196335
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob Z
+
+. eststo twostage_2: ivregress 2sls lnwklywge $controls i.yob (educ=Z)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(20)   =   22523.74
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1277
+                                                  Root MSE        =     .63399
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0953316    .026065     3.66   0.000     .0442452    .1464181
+        race |  -.2396011   .0420596    -5.70   0.000    -.3220363   -.1571659
+        smsa |  -.1369237   .0273573    -5.01   0.000    -.1905429   -.0833044
+      neweng |   -.085943   .0158987    -5.41   0.000    -.1171039    -.054782
+      midatl |  -.0217723   .0180537    -1.21   0.228    -.0571568    .0136123
+     enocent |   .0644242   .0276125     2.33   0.020     .0103047    .1185436
+     wnocent |  -.0683578   .0194533    -3.51   0.000    -.1064857   -.0302299
+       soatl |  -.0901175   .0285778    -3.15   0.002    -.1461289   -.0341062
+     esocent |  -.0924728   .0434909    -2.13   0.033    -.1777133   -.0072322
+     wsocent |  -.0551799   .0247521    -2.23   0.026    -.1036932   -.0066666
+          mt |  -.0736877   .0084026    -8.77   0.000    -.0901566   -.0572189
+             |
+         yob |
+       1931  |   -.009595   .0061977    -1.55   0.122    -.0217423    .0025522
+       1932  |  -.0152885   .0070656    -2.16   0.030    -.0291367   -.0014402
+       1933  |  -.0185557   .0083796    -2.21   0.027    -.0349795   -.0021319
+       1934  |  -.0226229   .0090382    -2.50   0.012    -.0403375   -.0049084
+       1935  |  -.0349808   .0107265    -3.26   0.001    -.0560043   -.0139572
+       1936  |  -.0369694   .0117626    -3.14   0.002    -.0600236   -.0139152
+       1937  |  -.0426365   .0133437    -3.20   0.001    -.0687898   -.0164833
+       1938  |   -.045119   .0154049    -2.93   0.003     -.075312   -.0149259
+       1939  |  -.0555912   .0165584    -3.36   0.001    -.0880449   -.0231374
+             |
+       _cons |   4.787252   .3534705    13.54   0.000     4.094462    5.480041
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   race smsa neweng midatl enocent wnocent soatl esocent wsocent
+               mt 1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob Z
+
+. eststo twostage_3: ivregress 2sls lnwklywge               i.yob (educ=i.qob)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      38.30
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.0905
+                                                  Root MSE        =     .64736
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1052524   .0200831     5.24   0.000     .0658903    .1446145
+             |
+         yob |
+       1931  |  -.0111128   .0058213    -1.91   0.056    -.0225223    .0002968
+       1932  |  -.0208865   .0061739    -3.38   0.001    -.0329871   -.0087858
+       1933  |  -.0255647   .0069357    -3.69   0.000    -.0391585   -.0119709
+       1934  |  -.0300725   .0073511    -4.09   0.000    -.0444803   -.0156647
+       1935  |   -.044136   .0083011    -5.32   0.000    -.0604058   -.0278662
+       1936  |  -.0450081   .0092591    -4.86   0.000    -.0631556   -.0268606
+       1937  |    -.05207   .0103092    -5.05   0.000    -.0722757   -.0318644
+       1938  |  -.0551846   .0118309    -4.66   0.000    -.0783728   -.0319964
+       1939  |  -.0678001   .0125445    -5.40   0.000    -.0923869   -.0432134
+             |
+       _cons |   4.591739   .2501626    18.36   0.000     4.101429    5.082049
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob 2.qob 3.qob 4.qob
+
+. eststo twostage_4: ivregress 2sls lnwklywge $controls i.yob (educ=i.qob)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(20)   =   22435.48
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1240
+                                                  Root MSE        =     .63536
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0979455   .0208666     4.69   0.000     .0570477    .1388432
+        race |  -.2354031   .0337605    -6.97   0.000    -.3015725   -.1692338
+        smsa |  -.1341958    .021971    -6.11   0.000    -.1772582   -.0911333
+      neweng |  -.0844519   .0131725    -6.41   0.000    -.1102695   -.0586343
+      midatl |  -.0200111   .0146713    -1.36   0.173    -.0487663    .0087442
+     enocent |   .0671639   .0222369     3.02   0.003     .0235804    .1107474
+     wnocent |  -.0664753   .0158746    -4.19   0.000     -.097589   -.0353617
+       soatl |  -.0872824   .0230161    -3.79   0.000    -.1323931   -.0421718
+     esocent |  -.0881453   .0349693    -2.52   0.012    -.1566839   -.0196067
+     wsocent |   -.052744   .0200219    -2.63   0.008    -.0919862   -.0135018
+          mt |  -.0730892   .0076135    -9.60   0.000    -.0880113   -.0581671
+             |
+         yob |
+       1931  |  -.0099608   .0058088    -1.71   0.086    -.0213458    .0014241
+       1932  |  -.0157947   .0063936    -2.47   0.013    -.0283259   -.0032634
+       1933  |  -.0192297   .0073554    -2.61   0.009    -.0336461   -.0048134
+       1934  |  -.0233809   .0078282    -2.99   0.003    -.0387239   -.0080379
+       1935  |  -.0359364   .0090856    -3.96   0.000    -.0537438   -.0181291
+       1936  |  -.0380406   .0098738    -3.85   0.000    -.0573929   -.0186882
+       1937  |   -.043882   .0110799    -3.96   0.000    -.0655983   -.0221657
+       1938  |  -.0465857   .0126724    -3.68   0.000    -.0714231   -.0217483
+       1939  |  -.0571799   .0135702    -4.21   0.000     -.083777   -.0305827
+             |
+       _cons |   4.751808   .2829876    16.79   0.000     4.197163    5.306454
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   race smsa neweng midatl enocent wnocent soatl esocent wsocent
+               mt 1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob 2.qob 3.qob 4.qob
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. 
+. estout, cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+
+----------------------------------------------------------------------------
+               twostage_1      twostage_2      twostage_3      twostage_4   
+                     b/se            b/se            b/se            b/se   
+----------------------------------------------------------------------------
+educ                0.105***        0.095***        0.105***        0.098***
+                   (0.02)          (0.03)          (0.02)          (0.02)   
+1930.yob            0.000           0.000           0.000           0.000   
+                      (.)             (.)             (.)             (.)   
+1931.yob           -0.011*         -0.010          -0.011*         -0.010*  
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1932.yob           -0.021***       -0.015**        -0.021***       -0.016** 
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1933.yob           -0.025***       -0.019**        -0.026***       -0.019***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1934.yob           -0.030***       -0.023**        -0.030***       -0.023***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1935.yob           -0.044***       -0.035***       -0.044***       -0.036***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1936.yob           -0.045***       -0.037***       -0.045***       -0.038***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1937.yob           -0.052***       -0.043***       -0.052***       -0.044***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1938.yob           -0.055***       -0.045***       -0.055***       -0.047***
+                   (0.01)          (0.02)          (0.01)          (0.01)   
+1939.yob           -0.068***       -0.056***       -0.068***       -0.057***
+                   (0.01)          (0.02)          (0.01)          (0.01)   
+race                               -0.240***                       -0.235***
+                                   (0.04)                          (0.03)   
+smsa                               -0.137***                       -0.134***
+                                   (0.03)                          (0.02)   
+neweng                             -0.086***                       -0.084***
+                                   (0.02)                          (0.01)   
+midatl                             -0.022                          -0.020   
+                                   (0.02)                          (0.01)   
+enocent                             0.064**                         0.067***
+                                   (0.03)                          (0.02)   
+wnocent                            -0.068***                       -0.066***
+                                   (0.02)                          (0.02)   
+soatl                              -0.090***                       -0.087***
+                                   (0.03)                          (0.02)   
+esocent                            -0.092**                        -0.088** 
+                                   (0.04)                          (0.03)   
+wsocent                            -0.055**                        -0.053***
+                                   (0.02)                          (0.02)   
+mt                                 -0.074***                       -0.073***
+                                   (0.01)                          (0.01)   
+_cons               4.597***        4.787***        4.592***        4.752***
+                   (0.31)          (0.35)          (0.25)          (0.28)   
+----------------------------------------------------------------------------
+* p<0.10, ** p<0.05, *** p<0.01
+
+. estout using "results/Table4.xls", cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+(output written to results/Table4.xls)
+
+. 
+.                                  
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. estout, cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+
+----------------------------------------------------------------------------
+               twostage_1      twostage_2      twostage_3      twostage_4   
+                     b/se            b/se            b/se            b/se   
+----------------------------------------------------------------------------
+educ                0.105***        0.095***        0.105***        0.098***
+                   (0.02)          (0.03)          (0.02)          (0.02)   
+1930.yob            0.000           0.000           0.000           0.000   
+                      (.)             (.)             (.)             (.)   
+1931.yob           -0.011*         -0.010          -0.011*         -0.010*  
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1932.yob           -0.021***       -0.015**        -0.021***       -0.016** 
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1933.yob           -0.025***       -0.019**        -0.026***       -0.019***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1934.yob           -0.030***       -0.023**        -0.030***       -0.023***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1935.yob           -0.044***       -0.035***       -0.044***       -0.036***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1936.yob           -0.045***       -0.037***       -0.045***       -0.038***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1937.yob           -0.052***       -0.043***       -0.052***       -0.044***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1938.yob           -0.055***       -0.045***       -0.055***       -0.047***
+                   (0.01)          (0.02)          (0.01)          (0.01)   
+1939.yob           -0.068***       -0.056***       -0.068***       -0.057***
+                   (0.01)          (0.02)          (0.01)          (0.01)   
+race                               -0.240***                       -0.235***
+                                   (0.04)                          (0.03)   
+smsa                               -0.137***                       -0.134***
+                                   (0.03)                          (0.02)   
+neweng                             -0.086***                       -0.084***
+                                   (0.02)                          (0.01)   
+midatl                             -0.022                          -0.020   
+                                   (0.02)                          (0.01)   
+enocent                             0.064**                         0.067***
+                                   (0.03)                          (0.02)   
+wnocent                            -0.068***                       -0.066***
+                                   (0.02)                          (0.02)   
+soatl                              -0.090***                       -0.087***
+                                   (0.03)                          (0.02)   
+esocent                            -0.092**                        -0.088** 
+                                   (0.04)                          (0.03)   
+wsocent                            -0.055**                        -0.053***
+                                   (0.02)                          (0.02)   
+mt                                 -0.074***                       -0.073***
+                                   (0.01)                          (0.01)   
+_cons               4.597***        4.787***        4.592***        4.752***
+                   (0.31)          (0.35)          (0.25)          (0.28)   
+----------------------------------------------------------------------------
+* p<0.10, ** p<0.05, *** p<0.01
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. ivregress 2sls lnwklywge i.yob (educ=i.qob), first
+
+First-stage regressions
+-----------------------
+
+                                                Number of obs     =    329,509
+                                                F(  12, 329496)   =      86.48
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0031
+                                                Adj R-squared     =     0.0031
+                                                Root MSE          =     3.2761
+
+------------------------------------------------------------------------------
+        educ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         yob |
+       1931  |   .1383144   .0258915     5.34   0.000     .0875678    .1890611
+       1932  |   .1770326   .0255471     6.93   0.000      .126961    .2271041
+       1933  |    .233588   .0258549     9.03   0.000     .1829131    .2842628
+       1934  |   .2637372   .0256078    10.30   0.000     .2135466    .3139279
+       1935  |   .3278824    .025435    12.89   0.000     .2780306    .3777343
+       1936  |   .3867054   .0254539    15.19   0.000     .3368166    .4365943
+       1937  |   .4477307   .0252078    17.76   0.000     .3983242    .4971372
+       1938  |   .5343777   .0249832    21.39   0.000     .4854114    .5833441
+       1939  |   .5730867   .0248843    23.03   0.000     .5243143    .6218591
+             |
+         qob |
+          2  |   .0566804     .01629     3.48   0.001     .0247524    .0886084
+          3  |   .1128366   .0159702     7.07   0.000     .0815355    .1441378
+          4  |   .1484963   .0162544     9.14   0.000      .116638    .1803545
+             |
+       _cons |   12.37595   .0204394   605.50   0.000     12.33589    12.41601
+------------------------------------------------------------------------------
+
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      38.30
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.0905
+                                                  Root MSE        =     .64736
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1052524   .0200831     5.24   0.000     .0658903    .1446145
+             |
+         yob |
+       1931  |  -.0111128   .0058213    -1.91   0.056    -.0225223    .0002968
+       1932  |  -.0208865   .0061739    -3.38   0.001    -.0329871   -.0087858
+       1933  |  -.0255647   .0069357    -3.69   0.000    -.0391585   -.0119709
+       1934  |  -.0300725   .0073511    -4.09   0.000    -.0444803   -.0156647
+       1935  |   -.044136   .0083011    -5.32   0.000    -.0604058   -.0278662
+       1936  |  -.0450081   .0092591    -4.86   0.000    -.0631556   -.0268606
+       1937  |    -.05207   .0103092    -5.05   0.000    -.0722757   -.0318644
+       1938  |  -.0551846   .0118309    -4.66   0.000    -.0783728   -.0319964
+       1939  |  -.0678001   .0125445    -5.40   0.000    -.0923869   -.0432134
+             |
+       _cons |   4.591739   .2501626    18.36   0.000     4.101429    5.082049
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob 2.qob 3.qob 4.qob
+
+. estat firststage
+
+  First-stage regression summary statistics
+  --------------------------------------------------------------------------
+               |            Adjusted      Partial
+      Variable |   R-sq.       R-sq.        R-sq.   F(3,329496)   Prob > F
+  -------------+------------------------------------------------------------
+          educ |  0.0031      0.0031       0.0003       32.2692    0.0000
+  --------------------------------------------------------------------------
+
+
+  Minimum eigenvalue statistic = 32.2692     
+
+  Critical Values                      # of endogenous regressors:    1
+  Ho: Instruments are weak             # of excluded instruments:     3
+  ---------------------------------------------------------------------
+                                     |    5%     10%     20%     30%
+  2SLS relative bias                 |  13.91    9.08    6.46    5.39
+  -----------------------------------+---------------------------------
+                                     |   10%     15%     20%     25%
+  2SLS Size of nominal 5% Wald test  |  22.30   12.83    9.54    7.80
+  LIML Size of nominal 5% Wald test  |   6.46    4.36    3.69    3.32
+  ---------------------------------------------------------------------
+
+
+. ivregress 2sls lnwklywge i.yob (educ=i.qob#i.yob), first
+
+First-stage regressions
+-----------------------
+
+                                                Number of obs     =    329,509
+                                                F(  39, 329469)   =      27.90
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0033
+                                                Adj R-squared     =     0.0032
+                                                Root MSE          =     3.2760
+
+------------------------------------------------------------------------------
+        educ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         yob |
+       1931  |   .2600294    .051796     5.02   0.000     .1585109     .361548
+       1932  |   .2535262   .0507839     4.99   0.000     .1539912    .3530612
+       1933  |   .3927851   .0514899     7.63   0.000     .2918664    .4937037
+       1934  |   .3668579   .0515515     7.12   0.000     .2658185    .4678973
+       1935  |   .3705018   .0511939     7.24   0.000     .2701633    .4708403
+       1936  |    .462637   .0508776     9.09   0.000     .3629183    .5623556
+       1937  |   .5518901   .0508855    10.85   0.000      .452156    .6516242
+       1938  |   .6582721   .0501089    13.14   0.000     .5600601     .756484
+       1939  |   .7225835   .0501202    14.42   0.000     .6243494    .8208176
+             |
+     qob#yob |
+     2 1930  |   .1480133   .0505638     2.93   0.003     .0489097    .2471169
+     2 1931  |  -.0093891   .0530119    -0.18   0.859    -.1132909    .0945127
+     2 1932  |   .0756676   .0518192     1.46   0.144    -.0258965    .1772317
+     2 1933  |  -.0384833   .0528219    -0.73   0.466    -.1420127    .0650462
+     2 1934  |   .0807044   .0528485     1.53   0.127     -.022877    .1842859
+     2 1935  |    .146019   .0518035     2.82   0.005     .0444856    .2475523
+     2 1936  |   .0680342   .0515843     1.32   0.187    -.0330696    .1691379
+     2 1937  |   .0117528   .0512115     0.23   0.818    -.0886202    .1121258
+     2 1938  |   .0689862   .0499779     1.38   0.167     -.028969    .1669414
+     2 1939  |   .0104101   .0498401     0.21   0.835     -.087275    .1080951
+     3 1930  |   .2114547   .0500891     4.22   0.000     .1132814    .3096279
+     3 1931  |   .1462824   .0524338     2.79   0.005     .0435136    .2490511
+     3 1932  |   .1265188    .050911     2.49   0.013     .0267348    .2263029
+     3 1933  |   .0807617   .0525675     1.54   0.124    -.0222691    .1837926
+     3 1934  |   .0607852   .0514358     1.18   0.237    -.0400274    .1615978
+     3 1935  |   .2104444   .0506269     4.16   0.000     .1112171    .3096717
+     3 1936  |   .1431918   .0506074     2.83   0.005     .0440027    .2423809
+     3 1937  |    .129877   .0497412     2.61   0.009     .0323858    .2273682
+     3 1938  |   .0478772   .0487622     0.98   0.326    -.0476953    .1434497
+     3 1939  |   -.013729    .048394    -0.28   0.777    -.1085799    .0811219
+     4 1930  |   .3442705   .0510413     6.74   0.000      .244231    .4443099
+     4 1931  |   .0716851   .0535646     1.34   0.181       -.0333    .1766702
+     4 1932  |   .1931804   .0515716     3.75   0.000     .0921016    .2942592
+     4 1933  |   .0190774   .0526972     0.36   0.717    -.0842075    .1223623
+     4 1934  |   .1506055     .05205     2.89   0.004     .0485889     .252622
+     4 1935  |   .1687325   .0518327     3.26   0.001      .067142     .270323
+     4 1936  |   .1849731   .0515596     3.59   0.000     .0839177    .2860285
+     4 1937  |   .1386865    .050917     2.72   0.006     .0388907    .2384823
+     4 1938  |   .0914545   .0497141     1.84   0.066    -.0059837    .1888928
+     4 1939  |   .1135405   .0494754     2.29   0.022     .0165701    .2105109
+             |
+       _cons |   12.28041   .0357551   343.46   0.000     12.21033    12.35048
+------------------------------------------------------------------------------
+
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      41.67
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1102
+                                                  Root MSE        =     .64034
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0891155   .0161098     5.53   0.000     .0575408    .1206901
+             |
+         yob |
+       1931  |  -.0088813   .0055293    -1.61   0.108    -.0197184    .0019558
+       1932  |  -.0180303     .00575    -3.14   0.002    -.0293001   -.0067606
+       1933  |  -.0217955   .0063005    -3.46   0.001    -.0341442   -.0094469
+       1934  |  -.0257878   .0065838    -3.92   0.000    -.0386919   -.0128837
+       1935  |  -.0388275   .0072664    -5.34   0.000    -.0530693   -.0245856
+       1936  |  -.0387617   .0079773    -4.86   0.000    -.0543969   -.0231264
+       1937  |  -.0448175   .0087577    -5.12   0.000    -.0619822   -.0276528
+       1938  |  -.0465455    .009911    -4.70   0.000    -.0659707   -.0271202
+       1939  |  -.0585271   .0104573    -5.60   0.000    -.0790231   -.0380311
+             |
+       _cons |   4.792727   .2006807    23.88   0.000       4.3994    5.186054
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob 2.qob#1930b.yob 2.qob#1931.yob
+               2.qob#1932.yob 2.qob#1933.yob 2.qob#1934.yob 2.qob#1935.yob
+               2.qob#1936.yob 2.qob#1937.yob 2.qob#1938.yob 2.qob#1939.yob
+               3.qob#1930b.yob 3.qob#1931.yob 3.qob#1932.yob 3.qob#1933.yob
+               3.qob#1934.yob 3.qob#1935.yob 3.qob#1936.yob 3.qob#1937.yob
+               3.qob#1938.yob 3.qob#1939.yob 4.qob#1930b.yob 4.qob#1931.yob
+               4.qob#1932.yob 4.qob#1933.yob 4.qob#1934.yob 4.qob#1935.yob
+               4.qob#1936.yob 4.qob#1937.yob 4.qob#1938.yob 4.qob#1939.yob
+
+. estat firststage
+
+  First-stage regression summary statistics
+  --------------------------------------------------------------------------
+               |            Adjusted      Partial
+      Variable |   R-sq.       R-sq.        R-sq.   F(30,329469)  Prob > F
+  -------------+------------------------------------------------------------
+          educ |  0.0033      0.0032       0.0004       4.90707    0.0000
+  --------------------------------------------------------------------------
+
+
+  Minimum eigenvalue statistic = 4.90707     
+
+  Critical Values                      # of endogenous regressors:    1
+  Ho: Instruments are weak             # of excluded instruments:    30
+  ---------------------------------------------------------------------
+                                     |    5%     10%     20%     30%
+  2SLS relative bias                 |  21.42   11.32    6.09    4.29
+  -----------------------------------+---------------------------------
+                                     |   10%     15%     20%     25%
+  2SLS Size of nominal 5% Wald test  |  86.17   44.78   30.72   23.65
+  LIML Size of nominal 5% Wald test  |   3.88    2.18    1.89    1.75
+  ---------------------------------------------------------------------
+
+
+. ivregress 2sls lnwklywge race married smsa neweng midatl enocent wnocent soatl esocent wsocent mt i.yob (educ=i.qob#i.yob)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(21)   =   30158.55
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1584
+                                                  Root MSE        =     .62273
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0805518   .0163846     4.92   0.000     .0484385     .112665
+        race |  -.2302179   .0261251    -8.81   0.000    -.2814221   -.1790136
+     married |   .2439689   .0048706    50.09   0.000     .2344227    .2535152
+        smsa |  -.1581466   .0174229    -9.08   0.000    -.1922948   -.1239985
+      neweng |  -.1033678   .0109775    -9.42   0.000    -.1248833   -.0818523
+      midatl |  -.0409571    .011911    -3.44   0.001    -.0643023    -.017612
+     enocent |   .0343439   .0178348     1.93   0.054    -.0006118    .0692995
+     wnocent |  -.0950523   .0130463    -7.29   0.000    -.1206226   -.0694819
+       soatl |  -.1203118   .0184479    -6.52   0.000    -.1564689   -.0841546
+     esocent |  -.1355007   .0279182    -4.85   0.000    -.1902194   -.0807821
+     wsocent |  -.0867657   .0162276    -5.35   0.000    -.1185711   -.0549602
+          mt |  -.0879569   .0070079   -12.55   0.000    -.1016921   -.0742216
+             |
+         yob |
+       1931  |  -.0064838   .0054362    -1.19   0.233    -.0171385    .0041709
+       1932  |  -.0118228   .0058059    -2.04   0.042    -.0232022   -.0004435
+       1933  |  -.0128383   .0065003    -1.98   0.048    -.0255787    -.000098
+       1934  |  -.0162055   .0068249    -2.37   0.018     -.029582    -.002829
+       1935  |  -.0271844   .0077269    -3.52   0.000    -.0423289   -.0120399
+       1936  |  -.0275322   .0083179    -3.31   0.001    -.0438349   -.0112294
+       1937  |  -.0313496   .0092155    -3.40   0.001    -.0494117   -.0132875
+       1938  |  -.0319571   .0104142    -3.07   0.002    -.0523685   -.0115457
+       1939  |  -.0412408   .0110988    -3.72   0.000    -.0629941   -.0194875
+             |
+       _cons |   4.784997    .219171    21.83   0.000      4.35543    5.214564
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   race married smsa neweng midatl enocent wnocent soatl esocent
+               wsocent mt 1931.yob 1932.yob 1933.yob 1934.yob 1935.yob
+               1936.yob 1937.yob 1938.yob 1939.yob 2.qob#1930b.yob
+               2.qob#1931.yob 2.qob#1932.yob 2.qob#1933.yob 2.qob#1934.yob
+               2.qob#1935.yob 2.qob#1936.yob 2.qob#1937.yob 2.qob#1938.yob
+               2.qob#1939.yob 3.qob#1930b.yob 3.qob#1931.yob 3.qob#1932.yob
+               3.qob#1933.yob 3.qob#1934.yob 3.qob#1935.yob 3.qob#1936.yob
+               3.qob#1937.yob 3.qob#1938.yob 3.qob#1939.yob 4.qob#1930b.yob
+               4.qob#1931.yob 4.qob#1932.yob 4.qob#1933.yob 4.qob#1934.yob
+               4.qob#1935.yob 4.qob#1936.yob 4.qob#1937.yob 4.qob#1938.yob
+               4.qob#1939.yob
+
+. estat firststage
+
+  First-stage regression summary statistics
+  --------------------------------------------------------------------------
+               |            Adjusted      Partial
+      Variable |   R-sq.       R-sq.        R-sq.   F(30,329458)  Prob > F
+  -------------+------------------------------------------------------------
+          educ |  0.0581      0.0579       0.0004       4.74736    0.0000
+  --------------------------------------------------------------------------
+
+
+  Minimum eigenvalue statistic = 4.74736     
+
+  Critical Values                      # of endogenous regressors:    1
+  Ho: Instruments are weak             # of excluded instruments:    30
+  ---------------------------------------------------------------------
+                                     |    5%     10%     20%     30%
+  2SLS relative bias                 |  21.42   11.32    6.09    4.29
+  -----------------------------------+---------------------------------
+                                     |   10%     15%     20%     25%
+  2SLS Size of nominal 5% Wald test  |  86.17   44.78   30.72   23.65
+  LIML Size of nominal 5% Wald test  |   3.88    2.18    1.89    1.75
+  ---------------------------------------------------------------------
+
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. estat firststage: ivregress 2sls lnwklywge                       i.yob (educ=i.qob), first
+estat firststage: not valid
+r(321);
+
+end of do-file
+
+r(321);
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. estout, cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+(tabulating estimates stored by eststo; specify "." to tabulate the active results)
+
+----------------------------------------------------------------------------
+               twostage_1      twostage_2      twostage_3      twostage_4   
+                     b/se            b/se            b/se            b/se   
+----------------------------------------------------------------------------
+educ                0.105***        0.095***        0.105***        0.098***
+                   (0.02)          (0.03)          (0.02)          (0.02)   
+1930.yob            0.000           0.000           0.000           0.000   
+                      (.)             (.)             (.)             (.)   
+1931.yob           -0.011*         -0.010          -0.011*         -0.010*  
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1932.yob           -0.021***       -0.015**        -0.021***       -0.016** 
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1933.yob           -0.025***       -0.019**        -0.026***       -0.019***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1934.yob           -0.030***       -0.023**        -0.030***       -0.023***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1935.yob           -0.044***       -0.035***       -0.044***       -0.036***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1936.yob           -0.045***       -0.037***       -0.045***       -0.038***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1937.yob           -0.052***       -0.043***       -0.052***       -0.044***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1938.yob           -0.055***       -0.045***       -0.055***       -0.047***
+                   (0.01)          (0.02)          (0.01)          (0.01)   
+1939.yob           -0.068***       -0.056***       -0.068***       -0.057***
+                   (0.01)          (0.02)          (0.01)          (0.01)   
+race                               -0.240***                       -0.235***
+                                   (0.04)                          (0.03)   
+smsa                               -0.137***                       -0.134***
+                                   (0.03)                          (0.02)   
+neweng                             -0.086***                       -0.084***
+                                   (0.02)                          (0.01)   
+midatl                             -0.022                          -0.020   
+                                   (0.02)                          (0.01)   
+enocent                             0.064**                         0.067***
+                                   (0.03)                          (0.02)   
+wnocent                            -0.068***                       -0.066***
+                                   (0.02)                          (0.02)   
+soatl                              -0.090***                       -0.087***
+                                   (0.03)                          (0.02)   
+esocent                            -0.092**                        -0.088** 
+                                   (0.04)                          (0.03)   
+wsocent                            -0.055**                        -0.053***
+                                   (0.02)                          (0.02)   
+mt                                 -0.074***                       -0.073***
+                                   (0.01)                          (0.01)   
+_cons               4.597***        4.787***        4.592***        4.752***
+                   (0.31)          (0.35)          (0.25)          (0.28)   
+----------------------------------------------------------------------------
+* p<0.10, ** p<0.05, *** p<0.01
+
+. estout using "results/Table5.xls", cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+(tabulating estimates stored by eststo; specify "." to tabulate the active results)
+(output written to results/Table5.xls)
+
+.                          
+.                                  
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. eststo clear
+
+. eststo twostage_5: ivregress 2sls lnwklywge                i.yob (educ=i.qob#i.yob)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      41.67
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1102
+                                                  Root MSE        =     .64034
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0891155   .0161098     5.53   0.000     .0575408    .1206901
+             |
+         yob |
+       1931  |  -.0088813   .0055293    -1.61   0.108    -.0197184    .0019558
+       1932  |  -.0180303     .00575    -3.14   0.002    -.0293001   -.0067606
+       1933  |  -.0217955   .0063005    -3.46   0.001    -.0341442   -.0094469
+       1934  |  -.0257878   .0065838    -3.92   0.000    -.0386919   -.0128837
+       1935  |  -.0388275   .0072664    -5.34   0.000    -.0530693   -.0245856
+       1936  |  -.0387617   .0079773    -4.86   0.000    -.0543969   -.0231264
+       1937  |  -.0448175   .0087577    -5.12   0.000    -.0619822   -.0276528
+       1938  |  -.0465455    .009911    -4.70   0.000    -.0659707   -.0271202
+       1939  |  -.0585271   .0104573    -5.60   0.000    -.0790231   -.0380311
+             |
+       _cons |   4.792727   .2006807    23.88   0.000       4.3994    5.186054
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob 2.qob#1930b.yob 2.qob#1931.yob
+               2.qob#1932.yob 2.qob#1933.yob 2.qob#1934.yob 2.qob#1935.yob
+               2.qob#1936.yob 2.qob#1937.yob 2.qob#1938.yob 2.qob#1939.yob
+               3.qob#1930b.yob 3.qob#1931.yob 3.qob#1932.yob 3.qob#1933.yob
+               3.qob#1934.yob 3.qob#1935.yob 3.qob#1936.yob 3.qob#1937.yob
+               3.qob#1938.yob 3.qob#1939.yob 4.qob#1930b.yob 4.qob#1931.yob
+               4.qob#1932.yob 4.qob#1933.yob 4.qob#1934.yob 4.qob#1935.yob
+               4.qob#1936.yob 4.qob#1937.yob 4.qob#1938.yob 4.qob#1939.yob
+
+. eststo twostage_6: ivregress 2sls lnwklywge $controls  i.yob (educ=i.qob#i.yob)
+
+Instrumental variables (2SLS) regression          Number of obs   =    329,509
+                                                  Wald chi2(20)   =   22940.22
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1432
+                                                  Root MSE        =     .62835
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0808397   .0165301     4.89   0.000     .0484413    .1132382
+        race |   -.262876   .0268533    -9.79   0.000    -.3155075   -.2102445
+        smsa |  -.1520481   .0174902    -8.69   0.000    -.1863282   -.1177679
+      neweng |    -.09421   .0109564    -8.60   0.000    -.1156841   -.0727358
+      midatl |  -.0315369   .0118843    -2.65   0.008    -.0548297   -.0082441
+     enocent |   .0492343   .0177752     2.77   0.006     .0143954    .0840731
+     wnocent |  -.0787948    .012935    -6.09   0.000    -.1041469   -.0534427
+       soatl |  -.1058362   .0184002    -5.75   0.000       -.1419   -.0697725
+     esocent |  -.1164657   .0278872    -4.18   0.000    -.1711236   -.0618078
+     wsocent |  -.0686854   .0161101    -4.26   0.000    -.1002606   -.0371103
+          mt |   -.077006   .0069779   -11.04   0.000    -.0906825   -.0633295
+             |
+         yob |
+       1931  |   -.007567   .0054784    -1.38   0.167    -.0183044    .0031704
+       1932  |   -.012482    .005853    -2.13   0.033    -.0239537   -.0010103
+       1933  |  -.0148185   .0065396    -2.27   0.023    -.0276358   -.0020012
+       1934  |  -.0184206   .0068632    -2.68   0.007    -.0318722   -.0049691
+       1935  |  -.0296821   .0077675    -3.82   0.000    -.0449061   -.0144581
+       1936  |  -.0310307   .0083501    -3.72   0.000    -.0473967   -.0146648
+       1937  |  -.0357312   .0092423    -3.87   0.000    -.0538457   -.0176166
+       1938  |  -.0369869   .0104407    -3.54   0.000    -.0574503   -.0165234
+       1939  |  -.0467829   .0111234    -4.21   0.000    -.0685845   -.0249814
+             |
+       _cons |   4.983761   .2241942    22.23   0.000     4.544349    5.423174
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   race smsa neweng midatl enocent wnocent soatl esocent wsocent
+               mt 1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob 2.qob#1930b.yob 2.qob#1931.yob
+               2.qob#1932.yob 2.qob#1933.yob 2.qob#1934.yob 2.qob#1935.yob
+               2.qob#1936.yob 2.qob#1937.yob 2.qob#1938.yob 2.qob#1939.yob
+               3.qob#1930b.yob 3.qob#1931.yob 3.qob#1932.yob 3.qob#1933.yob
+               3.qob#1934.yob 3.qob#1935.yob 3.qob#1936.yob 3.qob#1937.yob
+               3.qob#1938.yob 3.qob#1939.yob 4.qob#1930b.yob 4.qob#1931.yob
+               4.qob#1932.yob 4.qob#1933.yob 4.qob#1934.yob 4.qob#1935.yob
+               4.qob#1936.yob 4.qob#1937.yob 4.qob#1938.yob 4.qob#1939.yob
+
+. 
+. estout, cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+
+--------------------------------------------
+               twostage_5      twostage_6   
+                     b/se            b/se   
+--------------------------------------------
+educ                0.089***        0.081***
+                   (0.02)          (0.02)   
+1930.yob            0.000           0.000   
+                      (.)             (.)   
+1931.yob           -0.009          -0.008   
+                   (0.01)          (0.01)   
+1932.yob           -0.018***       -0.012** 
+                   (0.01)          (0.01)   
+1933.yob           -0.022***       -0.015** 
+                   (0.01)          (0.01)   
+1934.yob           -0.026***       -0.018***
+                   (0.01)          (0.01)   
+1935.yob           -0.039***       -0.030***
+                   (0.01)          (0.01)   
+1936.yob           -0.039***       -0.031***
+                   (0.01)          (0.01)   
+1937.yob           -0.045***       -0.036***
+                   (0.01)          (0.01)   
+1938.yob           -0.047***       -0.037***
+                   (0.01)          (0.01)   
+1939.yob           -0.059***       -0.047***
+                   (0.01)          (0.01)   
+race                               -0.263***
+                                   (0.03)   
+smsa                               -0.152***
+                                   (0.02)   
+neweng                             -0.094***
+                                   (0.01)   
+midatl                             -0.032***
+                                   (0.01)   
+enocent                             0.049***
+                                   (0.02)   
+wnocent                            -0.079***
+                                   (0.01)   
+soatl                              -0.106***
+                                   (0.02)   
+esocent                            -0.116***
+                                   (0.03)   
+wsocent                            -0.069***
+                                   (0.02)   
+mt                                 -0.077***
+                                   (0.01)   
+_cons               4.793***        4.984***
+                   (0.20)          (0.22)   
+--------------------------------------------
+* p<0.10, ** p<0.05, *** p<0.01
+
+. estout using "results/Table5.xls", cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+file results/Table5.xls already exists
+r(602);
+
+end of do-file
+
+r(602);
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. estout using "results/Table5.xls", cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend replace
+(output written to results/Table5.xls)
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. estout, cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+
+--------------------------------------------
+               twostage_5      twostage_6   
+                     b/se            b/se   
+--------------------------------------------
+educ                0.089***        0.081***
+                   (0.02)          (0.02)   
+1930.yob            0.000           0.000   
+                      (.)             (.)   
+1931.yob           -0.009          -0.008   
+                   (0.01)          (0.01)   
+1932.yob           -0.018***       -0.012** 
+                   (0.01)          (0.01)   
+1933.yob           -0.022***       -0.015** 
+                   (0.01)          (0.01)   
+1934.yob           -0.026***       -0.018***
+                   (0.01)          (0.01)   
+1935.yob           -0.039***       -0.030***
+                   (0.01)          (0.01)   
+1936.yob           -0.039***       -0.031***
+                   (0.01)          (0.01)   
+1937.yob           -0.045***       -0.036***
+                   (0.01)          (0.01)   
+1938.yob           -0.047***       -0.037***
+                   (0.01)          (0.01)   
+1939.yob           -0.059***       -0.047***
+                   (0.01)          (0.01)   
+race                               -0.263***
+                                   (0.03)   
+smsa                               -0.152***
+                                   (0.02)   
+neweng                             -0.094***
+                                   (0.01)   
+midatl                             -0.032***
+                                   (0.01)   
+enocent                             0.049***
+                                   (0.02)   
+wnocent                            -0.079***
+                                   (0.01)   
+soatl                              -0.106***
+                                   (0.02)   
+esocent                            -0.116***
+                                   (0.03)   
+wsocent                            -0.069***
+                                   (0.02)   
+mt                                 -0.077***
+                                   (0.01)   
+_cons               4.793***        4.984***
+                   (0.20)          (0.22)   
+--------------------------------------------
+* p<0.10, ** p<0.05, *** p<0.01
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. 
+. eststo clear
+
+. eststo liml_1: liml lnwklywge                i.yob (educ=i.qob)
+command liml is unrecognized
+r(199);
+
+end of do-file
+
+r(199);
+
+. ssc install liml
+ssc install: "liml" not found at SSC, type search liml
+(To find all packages at SSC that start with l, type ssc describe l)
+r(601);
+
+. search liml
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. 
+. eststo clear
+
+. eststo liml_1: liml lnwklywge                i.yob (educ=i.qob)
+command liml is unrecognized
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. 
+. eststo clear
+
+. eststo liml_1: liml lnwklywge                i.yob (educ=i.qob)
+command liml is unrecognized
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. eststo clear
+
+. eststo liml_1: ivregress liml lnwklywge                      i.yob (educ=i.qob)
+
+Instrumental variables (LIML) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      37.90
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.0886
+                                                  Root MSE        =     .64805
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |    .106442   .0204512     5.20   0.000     .0663584    .1465255
+             |
+         yob |
+       1931  |  -.0112773   .0058505    -1.93   0.054     -.022744    .0001895
+       1932  |   -.021097    .006216    -3.39   0.001    -.0332801   -.0089139
+       1933  |  -.0258426   .0069981    -3.69   0.000    -.0395586   -.0121265
+       1934  |  -.0303883   .0074259    -4.09   0.000    -.0449429   -.0158338
+       1935  |  -.0445273    .008401    -5.30   0.000    -.0609929   -.0280618
+       1936  |  -.0454685   .0093819    -4.85   0.000    -.0638567   -.0270804
+       1937  |  -.0526047   .0104569    -5.03   0.000    -.0730997   -.0321096
+       1938  |  -.0558215   .0120125    -4.65   0.000    -.0793655   -.0322775
+       1939  |  -.0684837   .0127414    -5.37   0.000    -.0934564   -.0435111
+             |
+       _cons |   4.576923    .254747    17.97   0.000     4.077628    5.076218
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob 2.qob 3.qob 4.qob
+
+. eststo liml_2: ivregress liml lnwklywge $controls  i.yob (educ=i.qob)
+
+Instrumental variables (LIML) regression          Number of obs   =    329,509
+                                                  Wald chi2(20)   =   22402.95
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1227
+                                                  Root MSE        =     .63582
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0987787   .0211355     4.67   0.000      .057354    .1402035
+        race |  -.2340648   .0341896    -6.85   0.000    -.3010752   -.1670545
+        smsa |  -.1333262   .0222495    -5.99   0.000    -.1769344   -.0897179
+      neweng |  -.0839766    .013313    -6.31   0.000    -.1100695   -.0578836
+      midatl |  -.0194496   .0148459    -1.31   0.190     -.048547    .0096478
+     enocent |   .0680373   .0225147     3.02   0.003     .0239093    .1121653
+     wnocent |  -.0658752   .0160592    -4.10   0.000    -.0973507   -.0343997
+       soatl |  -.0863786   .0233035    -3.71   0.000    -.1320526   -.0407047
+     esocent |  -.0867657   .0354098    -2.45   0.014    -.1561676   -.0173638
+     wsocent |  -.0519674   .0202662    -2.56   0.010    -.0916885   -.0122464
+          mt |  -.0728984   .0076556    -9.52   0.000    -.0879031   -.0578938
+             |
+         yob |
+       1931  |  -.0100774   .0058309    -1.73   0.084    -.0215058    .0013509
+       1932  |   -.015956   .0064294    -2.48   0.013    -.0285574   -.0033546
+       1933  |  -.0194446   .0074087    -2.62   0.009    -.0339655   -.0049237
+       1934  |  -.0236225   .0078909    -2.99   0.003    -.0390884   -.0081567
+       1935  |  -.0362411   .0091702    -3.95   0.000    -.0542144   -.0182679
+       1936  |   -.038382   .0099712    -3.85   0.000    -.0579252   -.0188388
+       1937  |   -.044279   .0111966    -3.95   0.000     -.066224   -.0223341
+       1938  |  -.0470533   .0128132    -3.67   0.000    -.0721668   -.0219398
+       1939  |  -.0576863   .0137243    -4.20   0.000    -.0845855   -.0307871
+             |
+       _cons |   4.740509   .2866334    16.54   0.000     4.178718      5.3023
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   race smsa neweng midatl enocent wnocent soatl esocent wsocent
+               mt 1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob 2.qob 3.qob 4.qob
+
+. eststo liml_3: ivregress liml lnwklywge                      i.yob (educ=i.qob#i.yob)
+
+Instrumental variables (LIML) regression          Number of obs   =    329,509
+                                                  Wald chi2(10)   =      38.43
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1067
+                                                  Root MSE        =     .64159
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0928764   .0177441     5.23   0.000     .0580985    .1276543
+             |
+         yob |
+       1931  |  -.0094014    .005633    -1.67   0.095    -.0204419    .0016392
+       1932  |   -.018696   .0059071    -3.17   0.002    -.0302736   -.0071184
+       1933  |   -.022674   .0065433    -3.47   0.001    -.0354986   -.0098494
+       1934  |  -.0267864   .0068808    -3.89   0.000    -.0402726   -.0133002
+       1935  |  -.0400647   .0076736    -5.22   0.000    -.0551048   -.0250246
+       1936  |  -.0402175   .0084868    -4.74   0.000    -.0568512   -.0235837
+       1937  |  -.0465078   .0093791    -4.96   0.000    -.0648905   -.0281251
+       1938  |   -.048559   .0106855    -4.54   0.000    -.0695022   -.0276158
+       1939  |  -.0606883   .0113013    -5.37   0.000    -.0828384   -.0385382
+             |
+       _cons |   4.745884   .2210337    21.47   0.000     4.312665    5.179102
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob 2.qob#1930b.yob 2.qob#1931.yob
+               2.qob#1932.yob 2.qob#1933.yob 2.qob#1934.yob 2.qob#1935.yob
+               2.qob#1936.yob 2.qob#1937.yob 2.qob#1938.yob 2.qob#1939.yob
+               3.qob#1930b.yob 3.qob#1931.yob 3.qob#1932.yob 3.qob#1933.yob
+               3.qob#1934.yob 3.qob#1935.yob 3.qob#1936.yob 3.qob#1937.yob
+               3.qob#1938.yob 3.qob#1939.yob 4.qob#1930b.yob 4.qob#1931.yob
+               4.qob#1932.yob 4.qob#1933.yob 4.qob#1934.yob 4.qob#1935.yob
+               4.qob#1936.yob 4.qob#1937.yob 4.qob#1938.yob 4.qob#1939.yob
+
+. eststo liml_4: ivregress liml lnwklywge $controls  i.yob (educ=i.qob#i.yob)
+
+Instrumental variables (LIML) regression          Number of obs   =    329,509
+                                                  Wald chi2(20)   =   22866.25
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1405
+                                                  Root MSE        =     .62934
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .0841214    .018087     4.65   0.000     .0486716    .1195712
+        race |  -.2576055   .0293286    -8.78   0.000    -.3150884   -.2001225
+        smsa |  -.1486232   .0190954    -7.78   0.000    -.1860494   -.1111969
+      neweng |  -.0923379   .0117336    -7.87   0.000    -.1153354   -.0693404
+      midatl |  -.0293257   .0128747    -2.28   0.023    -.0545597   -.0040917
+     enocent |    .052674   .0193706     2.72   0.007     .0147084    .0906396
+     wnocent |  -.0764314   .0139767    -5.47   0.000    -.1038252   -.0490376
+       soatl |  -.1022768   .0200506    -5.10   0.000    -.1415752   -.0629783
+     esocent |  -.1110325   .0304222    -3.65   0.000    -.1706589   -.0514061
+     wsocent |  -.0656271   .0175046    -3.75   0.000    -.0999355   -.0313188
+          mt |  -.0762546    .007185   -10.61   0.000     -.090337   -.0621721
+             |
+         yob |
+       1931  |  -.0080262   .0055808    -1.44   0.150    -.0189644    .0029119
+       1932  |  -.0131175   .0060295    -2.18   0.030     -.024935      -.0013
+       1933  |  -.0156648   .0068137    -2.30   0.022    -.0290195   -.0023101
+       1934  |  -.0193722    .007191    -2.69   0.007    -.0334664   -.0052781
+       1935  |  -.0308819   .0082227    -3.76   0.000    -.0469982   -.0147657
+       1936  |  -.0323755   .0088797    -3.65   0.000    -.0497795   -.0149715
+       1937  |  -.0372949   .0098858    -3.77   0.000    -.0566708    -.017919
+       1938  |  -.0388284   .0112272    -3.46   0.001    -.0608334   -.0168234
+       1939  |  -.0487776    .011988    -4.07   0.000    -.0722736   -.0252815
+             |
+       _cons |   4.939262   .2453011    20.14   0.000     4.458481    5.420044
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   race smsa neweng midatl enocent wnocent soatl esocent wsocent
+               mt 1931.yob 1932.yob 1933.yob 1934.yob 1935.yob 1936.yob
+               1937.yob 1938.yob 1939.yob 2.qob#1930b.yob 2.qob#1931.yob
+               2.qob#1932.yob 2.qob#1933.yob 2.qob#1934.yob 2.qob#1935.yob
+               2.qob#1936.yob 2.qob#1937.yob 2.qob#1938.yob 2.qob#1939.yob
+               3.qob#1930b.yob 3.qob#1931.yob 3.qob#1932.yob 3.qob#1933.yob
+               3.qob#1934.yob 3.qob#1935.yob 3.qob#1936.yob 3.qob#1937.yob
+               3.qob#1938.yob 3.qob#1939.yob 4.qob#1930b.yob 4.qob#1931.yob
+               4.qob#1932.yob 4.qob#1933.yob 4.qob#1934.yob 4.qob#1935.yob
+               4.qob#1936.yob 4.qob#1937.yob 4.qob#1938.yob 4.qob#1939.yob
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. estout, cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+
+----------------------------------------------------------------------------
+                   liml_1          liml_2          liml_3          liml_4   
+                     b/se            b/se            b/se            b/se   
+----------------------------------------------------------------------------
+educ                0.106***        0.099***        0.093***        0.084***
+                   (0.02)          (0.02)          (0.02)          (0.02)   
+1930.yob            0.000           0.000           0.000           0.000   
+                      (.)             (.)             (.)             (.)   
+1931.yob           -0.011*         -0.010*         -0.009*         -0.008   
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1932.yob           -0.021***       -0.016**        -0.019***       -0.013** 
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1933.yob           -0.026***       -0.019***       -0.023***       -0.016** 
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1934.yob           -0.030***       -0.024***       -0.027***       -0.019***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1935.yob           -0.045***       -0.036***       -0.040***       -0.031***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1936.yob           -0.045***       -0.038***       -0.040***       -0.032***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1937.yob           -0.053***       -0.044***       -0.047***       -0.037***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1938.yob           -0.056***       -0.047***       -0.049***       -0.039***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+1939.yob           -0.068***       -0.058***       -0.061***       -0.049***
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+race                               -0.234***                       -0.258***
+                                   (0.03)                          (0.03)   
+smsa                               -0.133***                       -0.149***
+                                   (0.02)                          (0.02)   
+neweng                             -0.084***                       -0.092***
+                                   (0.01)                          (0.01)   
+midatl                             -0.019                          -0.029** 
+                                   (0.01)                          (0.01)   
+enocent                             0.068***                        0.053***
+                                   (0.02)                          (0.02)   
+wnocent                            -0.066***                       -0.076***
+                                   (0.02)                          (0.01)   
+soatl                              -0.086***                       -0.102***
+                                   (0.02)                          (0.02)   
+esocent                            -0.087**                        -0.111***
+                                   (0.04)                          (0.03)   
+wsocent                            -0.052**                        -0.066***
+                                   (0.02)                          (0.02)   
+mt                                 -0.073***                       -0.076***
+                                   (0.01)                          (0.01)   
+_cons               4.577***        4.741***        4.746***        4.939***
+                   (0.25)          (0.29)          (0.22)          (0.25)   
+----------------------------------------------------------------------------
+* p<0.10, ** p<0.05, *** p<0.01
+
+. estout using "results/Table6.xls", cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend replace
+(note: file results/Table6.xls not found)
+(output written to results/Table6.xls)
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. eststo clear
+
+. 
+. eststo jive_1: jive lnwklywge            i.yob (educ=i.qob)
+factor-variable operators not allowed
+r(101);
+
+end of do-file
+
+r(101);
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. eststo clear
+
+. xi i.qob*i.yob /*jive do not allowed for i. command*/
+i.qob             _Iqob_1-4           (naturally coded; _Iqob_1 omitted)
+i.yob             _Iyob_1930-1939     (naturally coded; _Iyob_1930 omitted)
+i.qob*i.yob       _IqobXyob_#_#       (coded as above)
+
+. 
+. eststo jive_1: jive lnwklywge            _Iyob_* (educ=_Iqob_*)
+
+Jackknife instrumental variables regression (UJIVE1)
+
+First-stage summary                                  Number of obs   =  329509
+-------------------------                            F(  10,329498)  =    3.32
+F(   3,329496)  =   32.27                            Prob > F        =  0.0003
+Prob > F        =  0.0000                            R-squared       =  0.0814
+R-squared       =  0.0031                            Adj R-squared   =  0.0814
+                                                     Root MSE        =  0.6506
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1105676   .0233216     4.74   0.000      .064858    .1562772
+  _Iyob_1931 |  -.0118478   .0060695    -1.95   0.051    -.0237438    .0000483
+  _Iyob_1932 |  -.0218272   .0065404    -3.34   0.001    -.0346462   -.0090082
+  _Iyob_1933 |  -.0268062   .0074857    -3.58   0.000     -.041478   -.0121344
+  _Iyob_1934 |  -.0314838   .0080129    -3.93   0.000    -.0471888   -.0157788
+  _Iyob_1935 |  -.0458846   .0091856    -5.00   0.000     -.063888   -.0278811
+  _Iyob_1936 |  -.0470655   .0103464    -4.55   0.000    -.0673441   -.0267869
+  _Iyob_1937 |  -.0544589   .0116156    -4.69   0.000    -.0772252   -.0316926
+  _Iyob_1938 |  -.0580302   .0134352    -4.32   0.000    -.0843628   -.0316976
+  _Iyob_1939 |  -.0708545   .0142838    -4.96   0.000    -.0988503   -.0428588
+       _cons |   4.525537   .2904954    15.58   0.000     3.956174      5.0949
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   _Iyob_1931 _Iyob_1932 _Iyob_1933 _Iyob_1934 _Iyob_1935
+               _Iyob_1936 _Iyob_1937 _Iyob_1938 _Iyob_1939 _Iqob_2 _Iqob_3
+               _Iqob_4
+------------------------------------------------------------------------------
+
+. eststo jive_2: jive lnwklywge $controls  _Iyob_* (educ=_Iqob_*)
+
+Jackknife instrumental variables regression (UJIVE1)
+
+First-stage summary                                  Number of obs   =  329509
+-------------------------                            F(  20,329488)  = 1095.54
+F(   3,329486)  =   30.45                            Prob > F        =  0.0000
+Prob > F        =  0.0000                            R-squared       =  0.1033
+R-squared       =  0.0574                            Adj R-squared   =  0.1032
+                                                     Root MSE        =  0.6428
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1096845   .0283115     3.87   0.000     .0541948    .1651742
+        race |  -.2165494   .0456571    -4.74   0.000     -.306036   -.1270629
+        smsa |  -.1219444   .0296936    -4.11   0.000     -.180143   -.0637458
+      neweng |  -.0777553   .0171292    -4.54   0.000    -.1113281   -.0441824
+      midatl |  -.0121013   .0195419    -0.62   0.536    -.0504029    .0262003
+     enocent |   .0794683   .0299517     2.65   0.008     .0207638    .1381728
+     wnocent |  -.0580209   .0210363    -2.76   0.006    -.0992514   -.0167905
+       soatl |  -.0745496   .0309982    -2.40   0.016    -.1353053    -.013794
+     esocent |    -.06871   .0471923    -1.46   0.145    -.1612055    .0237855
+     wsocent |  -.0418039   .0268216    -1.56   0.119    -.0943735    .0107656
+          mt |  -.0704013   .0088312    -7.97   0.000    -.0877103   -.0530924
+  _Iyob_1931 |  -.0116036   .0064427    -1.80   0.072    -.0242311    .0010238
+  _Iyob_1932 |   -.018068    .007429    -2.43   0.015    -.0326286   -.0035074
+  _Iyob_1933 |   -.022257   .0088907    -2.50   0.012    -.0396825   -.0048315
+  _Iyob_1934 |  -.0267849   .0096255    -2.78   0.005    -.0456506   -.0079193
+  _Iyob_1935 |  -.0402286   .0114921    -3.50   0.000    -.0627528   -.0177044
+  _Iyob_1936 |  -.0428511   .0126314    -3.39   0.001    -.0676084   -.0180939
+  _Iyob_1937 |  -.0494756   .0143687    -3.44   0.001    -.0776378   -.0213134
+  _Iyob_1938 |   -.053173   .0166263    -3.20   0.001      -.08576   -.0205861
+  _Iyob_1939 |  -.0643149   .0178874    -3.60   0.000    -.0993736   -.0292562
+       _cons |   4.592627   .3839313    11.96   0.000     3.840133    5.345121
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   race smsa neweng midatl enocent wnocent soatl esocent wsocent mt
+               _Iyob_1931 _Iyob_1932 _Iyob_1933 _Iyob_1934 _Iyob_1935
+               _Iyob_1936 _Iyob_1937 _Iyob_1938 _Iyob_1939 _Iqob_2 _Iqob_3
+               _Iqob_4
+------------------------------------------------------------------------------
+
+. eststo jive_3: jive lnwklywge                _Iyob_* (educ=_IqobXyob_*)
+
+Jackknife instrumental variables regression (UJIVE1)
+
+First-stage summary                                  Number of obs   =  329509
+-------------------------                            F(  10,329498)  =    2.27
+F(  27,329472)  =    3.70                            Prob > F        =  0.0118
+Prob > F        =  0.0000                            R-squared       =  0.0851
+R-squared       =  0.0031                            Adj R-squared   =  0.0851
+                                                     Root MSE        =  0.6493
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1084863   .0313616     3.46   0.001     .0470183    .1699542
+  _Iyob_1931 |    -.01156   .0067185    -1.72   0.085    -.0247281    .0016082
+  _Iyob_1932 |  -.0214588    .007513    -2.86   0.004    -.0361841   -.0067335
+  _Iyob_1933 |  -.0263201   .0089395    -2.94   0.003    -.0438413   -.0087988
+  _Iyob_1934 |  -.0309311   .0097518    -3.17   0.002    -.0500444   -.0118179
+  _Iyob_1935 |  -.0451999   .0114826    -3.94   0.000    -.0677055   -.0226942
+  _Iyob_1936 |  -.0462599   .0131461    -3.52   0.000    -.0720259   -.0204939
+  _Iyob_1937 |  -.0535234   .0149542    -3.58   0.000    -.0828333   -.0242136
+  _Iyob_1938 |  -.0569159   .0175048    -3.25   0.001    -.0912248    -.022607
+  _Iyob_1939 |  -.0696585   .0186845    -3.73   0.000    -.1062796   -.0330374
+       _cons |   4.551461   .3906301    11.65   0.000     3.785837    5.317085
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   _Iyob_1931 _Iyob_1932 _Iyob_1933 _Iyob_1934 _Iyob_1935
+               _Iyob_1936 _Iyob_1937 _Iyob_1938 _Iyob_1939 _IqobXyob_2_1931
+               _IqobXyob_2_1932 _IqobXyob_2_1933 _IqobXyob_2_1934
+               _IqobXyob_2_1935 _IqobXyob_2_1936 _IqobXyob_2_1937
+               _IqobXyob_2_1938 _IqobXyob_2_1939 _IqobXyob_3_1931
+               _IqobXyob_3_1932 _IqobXyob_3_1933 _IqobXyob_3_1934
+               _IqobXyob_3_1935 _IqobXyob_3_1936 _IqobXyob_3_1937
+               _IqobXyob_3_1938 _IqobXyob_3_1939 _IqobXyob_4_1931
+               _IqobXyob_4_1932 _IqobXyob_4_1933 _IqobXyob_4_1934
+               _IqobXyob_4_1935 _IqobXyob_4_1936 _IqobXyob_4_1937
+               _IqobXyob_4_1938 _IqobXyob_4_1939
+------------------------------------------------------------------------------
+
+. eststo jive_4: jive lnwklywge $controls  _Iyob_* (educ=_IqobXyob_*)
+
+Jackknife instrumental variables regression (UJIVE1)
+
+First-stage summary                                  Number of obs   =  329509
+-------------------------                            F(  20,329488)  = 1106.38
+F(  27,329462)  =    3.53                            Prob > F        =  0.0000
+Prob > F        =  0.0000                            R-squared       =  0.1124
+R-squared       =  0.0574                            Adj R-squared   =  0.1124
+                                                     Root MSE        =  0.6395
+
+------------------------------------------------------------------------------
+   lnwklywge |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   .1049134   .0405432     2.59   0.010     .0254498    .1843769
+        race |  -.2242122   .0652445    -3.44   0.001    -.3520895   -.0963348
+        smsa |  -.1269238   .0424141    -2.99   0.003    -.2100542   -.0437933
+      neweng |   -.080477    .023815    -3.38   0.001    -.1271537   -.0338003
+      midatl |  -.0153161   .0276419    -0.55   0.580    -.0694934    .0388612
+     enocent |   .0744674   .0426877     1.74   0.081    -.0091992    .1581341
+     wnocent |  -.0614571   .0296495    -2.07   0.038    -.1195693   -.0033448
+       soatl |  -.0797247   .0441764    -1.80   0.071    -.1663091    .0068598
+     esocent |  -.0766091    .067345    -1.14   0.255    -.2086035    .0553852
+     wsocent |  -.0462503   .0380871    -1.21   0.225       -.1209    .0283994
+          mt |  -.0714938   .0110354    -6.48   0.000    -.0931229   -.0498647
+  _Iyob_1931 |   -.010936   .0075987    -1.44   0.150    -.0258291    .0039572
+  _Iyob_1932 |   -.017144   .0093016    -1.84   0.065    -.0353749    .0010868
+  _Iyob_1933 |  -.0210266     .01161    -1.81   0.070    -.0437818    .0017286
+  _Iyob_1934 |  -.0254014   .0127754    -1.99   0.047    -.0504409   -.0003619
+  _Iyob_1935 |  -.0384841   .0156335    -2.46   0.014    -.0691254   -.0078429
+  _Iyob_1936 |   -.040896   .0173417    -2.36   0.018    -.0748852   -.0069068
+  _Iyob_1937 |  -.0472022   .0199358    -2.37   0.018    -.0862758   -.0081286
+  _Iyob_1938 |  -.0504957   .0232678    -2.17   0.030       -.0961   -.0048915
+  _Iyob_1939 |   -.061415   .0251167    -2.45   0.014     -.110643   -.0121869
+       _cons |   4.657323   .5497853     8.47   0.000      3.57976    5.734887
+------------------------------------------------------------------------------
+Instrumented:  educ
+Instruments:   race smsa neweng midatl enocent wnocent soatl esocent wsocent mt
+               _Iyob_1931 _Iyob_1932 _Iyob_1933 _Iyob_1934 _Iyob_1935
+               _Iyob_1936 _Iyob_1937 _Iyob_1938 _Iyob_1939 _IqobXyob_2_1931
+               _IqobXyob_2_1932 _IqobXyob_2_1933 _IqobXyob_2_1934
+               _IqobXyob_2_1935 _IqobXyob_2_1936 _IqobXyob_2_1937
+               _IqobXyob_2_1938 _IqobXyob_2_1939 _IqobXyob_3_1931
+               _IqobXyob_3_1932 _IqobXyob_3_1933 _IqobXyob_3_1934
+               _IqobXyob_3_1935 _IqobXyob_3_1936 _IqobXyob_3_1937
+               _IqobXyob_3_1938 _IqobXyob_3_1939 _IqobXyob_4_1931
+               _IqobXyob_4_1932 _IqobXyob_4_1933 _IqobXyob_4_1934
+               _IqobXyob_4_1935 _IqobXyob_4_1936 _IqobXyob_4_1937
+               _IqobXyob_4_1938 _IqobXyob_4_1939
+------------------------------------------------------------------------------
+
+. 
+. estout, cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
+
+----------------------------------------------------------------------------
+                   jive_1          jive_2          jive_3          jive_4   
+                     b/se            b/se            b/se            b/se   
+----------------------------------------------------------------------------
+educ                0.111***        0.110***        0.108***        0.105***
+                   (0.02)          (0.03)          (0.03)          (0.04)   
+_Iyob_1931         -0.012*         -0.012*         -0.012*         -0.011   
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+_Iyob_1932         -0.022***       -0.018**        -0.021***       -0.017*  
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+_Iyob_1933         -0.027***       -0.022**        -0.026***       -0.021*  
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+_Iyob_1934         -0.031***       -0.027***       -0.031***       -0.025** 
+                   (0.01)          (0.01)          (0.01)          (0.01)   
+_Iyob_1935         -0.046***       -0.040***       -0.045***       -0.038** 
+                   (0.01)          (0.01)          (0.01)          (0.02)   
+_Iyob_1936         -0.047***       -0.043***       -0.046***       -0.041** 
+                   (0.01)          (0.01)          (0.01)          (0.02)   
+_Iyob_1937         -0.054***       -0.049***       -0.054***       -0.047** 
+                   (0.01)          (0.01)          (0.01)          (0.02)   
+_Iyob_1938         -0.058***       -0.053***       -0.057***       -0.050** 
+                   (0.01)          (0.02)          (0.02)          (0.02)   
+_Iyob_1939         -0.071***       -0.064***       -0.070***       -0.061** 
+                   (0.01)          (0.02)          (0.02)          (0.03)   
+race                               -0.217***                       -0.224***
+                                   (0.05)                          (0.07)   
+smsa                               -0.122***                       -0.127***
+                                   (0.03)                          (0.04)   
+neweng                             -0.078***                       -0.080***
+                                   (0.02)                          (0.02)   
+midatl                             -0.012                          -0.015   
+                                   (0.02)                          (0.03)   
+enocent                             0.079***                        0.074*  
+                                   (0.03)                          (0.04)   
+wnocent                            -0.058***                       -0.061** 
+                                   (0.02)                          (0.03)   
+soatl                              -0.075**                        -0.080*  
+                                   (0.03)                          (0.04)   
+esocent                            -0.069                          -0.077   
+                                   (0.05)                          (0.07)   
+wsocent                            -0.042                          -0.046   
+                                   (0.03)                          (0.04)   
+mt                                 -0.070***                       -0.071***
+                                   (0.01)                          (0.01)   
+_cons               4.526***        4.593***        4.551***        4.657***
+                   (0.29)          (0.38)          (0.39)          (0.55)   
+----------------------------------------------------------------------------
+* p<0.10, ** p<0.05, *** p<0.01
+
+. estout using "results/Table7.xls", cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend replace
+(note: file results/Table7.xls not found)
+(output written to results/Table7.xls)
+
+. 
+end of do-file
+
