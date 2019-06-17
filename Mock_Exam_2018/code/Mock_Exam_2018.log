@@ -1,0 +1,103 @@
+-----------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/mac/GitHub/Applied-Econometrics-Stata-/Mock_Exam_2018/code/Mock_Exam_2018.log
+  log type:  text
+ opened on:  17 Jun 2019, 16:01:13
+
+. set more off
+
+. 
+. ******************************************
+. *   Load data & labeling                 *
+. ******************************************
+. 
+. use "$path/raw_data/job_search.dta", clear
+
+. lab var pnr "Social security number (anonymized)"
+
+. lab var month "Month after start of unemployment"
+
+. lab var age "Age by end of 2013"
+
+. lab var yob "Year of birth"
+
+. lab var mob "Month of birth"
+
+. lab var dob "Day of birth"
+
+. lab var educ "Completed further education (no=1, short=2, medium=3, long=4)"
+
+. lab var jobcourse "Dummy taking the value 1 if individual is or has been enrolled in job course"
+
+. lab var employed "Dummy taking the value 1 if individual is employed"
+
+. 
+. ******************************************
+. *   Problem 1                            *
+. ******************************************
+. 
+. * Problem 1.1 
+. 
+. gen treat = 0
+
+. replace treat = 1 if (dob <=15)
+(142,296 real changes made)
+
+. 
+. tabstat month age age educ jobcourse, by(treat) stats(n mean p50 min max) c(s) longstub
+
+treat        variable |         N      mean       p50       min       max
+----------------------+--------------------------------------------------
+0               month |    145704      12.5      12.5         1        24
+                  age |    145704  33.55263        34        18        49
+                  age |    145704  33.55263        34        18        49
+                 educ |    145704  2.651293         3         1         4
+            jobcourse |    145704         0         0         0         0
+----------------------+--------------------------------------------------
+1               month |    142296      12.5      12.5         1        24
+                  age |    142296  33.43313        33        18        49
+                  age |    142296  33.43313        33        18        49
+                 educ |    142296  2.628099         3         1         4
+            jobcourse |    142296  .3852884         0         0         1
+----------------------+--------------------------------------------------
+Total           month |    288000      12.5      12.5         1        24
+                  age |    288000  33.49358        33        18        49
+                  age |    288000  33.49358        33        18        49
+                 educ |    288000  2.639833         3         1         4
+            jobcourse |    288000  .1903646         0         0         1
+-------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. do "/var/folders/4v/cxtc0hzx0fq4v9g8k_8603s80000gn/T//SD09345.000000"
+
+. tabstat pnr month age age educ jobcourse, by(treat) stats(n mean p50 min max) c(s) longstub
+
+treat        variable |         N      mean       p50       min       max
+----------------------+--------------------------------------------------
+0                 pnr |    145704  6010.594      6014         1     12000
+                month |    145704      12.5      12.5         1        24
+                  age |    145704  33.55263        34        18        49
+                  age |    145704  33.55263        34        18        49
+                 educ |    145704  2.651293         3         1         4
+            jobcourse |    145704         0         0         0         0
+----------------------+--------------------------------------------------
+1                 pnr |    142296  5990.165      5983         2     11997
+                month |    142296      12.5      12.5         1        24
+                  age |    142296  33.43313        33        18        49
+                  age |    142296  33.43313        33        18        49
+                 educ |    142296  2.628099         3         1         4
+            jobcourse |    142296  .3852884         0         0         1
+----------------------+--------------------------------------------------
+Total             pnr |    288000    6000.5    6000.5         1     12000
+                month |    288000      12.5      12.5         1        24
+                  age |    288000  33.49358        33        18        49
+                  age |    288000  33.49358        33        18        49
+                 educ |    288000  2.639833         3         1         4
+            jobcourse |    288000  .1903646         0         0         1
+-------------------------------------------------------------------------
+
+. 
+end of do-file
+

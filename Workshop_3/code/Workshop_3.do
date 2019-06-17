@@ -58,11 +58,11 @@ eststo lr_1_r: reg empc age treat if age>=25 & quebec==1 & year==1986 [weight=no
 
 /* When weighting the regression according to the cell number of obser-
 vations, we obtain the identical estimates as running the regression on
-individual data. We estimate a 4:0 percentage points lower employment
+individual data. We estimate a 4,0 percentage points lower employment
 probability due to the higher social assistance benefit level. This effect is
-significant at a 1 percent level. This is a local average treatment e¤ect, i.e.
+significant at a 1 percent level. This is a local average treatment effect, i.e.
 this estimate only holds for individuals around 30 years of age in Quebec.
-A similar increase in social assistance benefits could give di¤erent effect
+A similar increase in social assistance benefits could give different effect
 in another part of Canada (or the World) and for other ages. The LATE
 could be smaller or larger than ATE and ATT. */
 
@@ -98,7 +98,7 @@ individual.*/
 *******************************************
 
 * Empc = B0 + B1age + B2age*treat + B3treat + u
-* Taking into account of the slopes being di¤erent to the left and right of the cut-off.
+* Taking into account of the slopes being different to the left and right of the cut-off.
 
 gen age_treat =treat*age
 
