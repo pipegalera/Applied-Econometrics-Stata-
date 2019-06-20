@@ -1,0 +1,7 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0\froman Times New Roman;}{\f1\fswiss Arial;}{\f2\fmodern Courier New;}}
+\pard\qc\sb79\sa79\fs29 LATE\par
+\trowd\intbl\trautofit1\trgaph144\sb79\sa0\trqc\clbrdrt\brdrs\cellx2856\clbrdrt\brdrs\cellx3696\fs24 \pard\intbl\ql E(Y|Z=1)-E(Y|Z=0)\cell \pard\intbl\tqdec\tx401 0.022\cell\row
+\trowd\intbl\trautofit1\trgaph144\sb0\sa0\trqc\cellx2856\cellx3696\fs24 \pard\intbl\ql E(S|Z=1)-E(S|Z=0)\cell \pard\intbl\tqdec\tx401 0.385\cell\row
+\trowd\intbl\trautofit1\trgaph144\sb0\sa79\trqc\clbrdrb\brdrs\cellx2856\clbrdrb\brdrs\cellx3696\fs24 \pard\intbl\ql Wald estimate\cell \pard\intbl\tqdec\tx401 0.056\cell\row
+\pard\sb0\sa0\fs24\par
+}

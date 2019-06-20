@@ -1,0 +1,24 @@
+	(1)
+VARIABLES	First stage
+	
+subsidy	0.000***
+	(0.000)
+D30	0.016***
+	(0.006)
+m2_30	0.014***
+	(0.001)
+age	-0.000
+	(0.000)
+adults	-0.006
+	(0.004)
+children	-0.051***
+	(0.003)
+income	0.000***
+	(0.000)
+Constant	7.784***
+	(0.060)
+	
+Observations	6,911
+R-squared	0.645
+Robust standard errors in parentheses	
+*** p<0.01, ** p<0.05, * p<0.1	

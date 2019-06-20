@@ -41,7 +41,7 @@ lab var employed "Dummy taking the value 1 if individual is employed"
 gen treat = 0
 replace treat = 1 if (dob <=15)
 
-tabstat pnr month age age educ jobcourse, by(treat) stats(n mean p50 min max) c(s) longstub
+tabstat pnr yob mob dob age educ jobcourse employed, by(treat) stats(n mean p50 min max) c(s) longstub
 
 ttest employed, by(treat)
 
@@ -57,8 +57,8 @@ restore
 
 
 preserve
-collapse employed, by(month eligible)
-twoway (connected employed month if eligible==0) (connected employed month if eligible==1), ///
+collapse employed, by(month treat)
+twoway (connected employed month if treat==0) (connected employed month if treat==1), ///
 		legend(label(1 "Ineligible") label(2 "Eligible")) ytitle("Employed") title("Panel B") saving(desc3, replace)
 restore
 
@@ -69,8 +69,6 @@ graph export "graphs/Problem1_2.png", replace
 ******************************************
 *   Problem 2                            *
 ******************************************
-/*dummies for the elapsed time since the start of the unemployment spell??????*/
-
 
 * Problem 2.1
 gen age_sq = age^2
@@ -79,22 +77,22 @@ eststo clear
 eststo ols_1: reg employed jobcourse age age_sq i.educ i.month, r
 eststo ols_2: reg employed jobcourse age age_sq i.educ i.month, cluster(yob)
 eststo ols_3: reg employed jobcourse age age_sq i.educ i.month, cluster(pnr)
-estout using "tables/Problem2.1.xls", cells(b(star fmt(3)) se(par fmt(3))) starlevels(* 0.10 ** 0.05 *** 0.01) legend style(tex) replace
+outreg2 using "tables/Problem2.1.xls",  replace excel dec(3)
 
 * Problem 2.2
 eststo clear
 eststo ols_4: reg employed treat age age_sq i.educ i.month, r
 eststo ols_5: reg employed treat age age_sq i.educ i.month, cluster(yob)
 eststo ols_6: reg employed treat age age_sq i.educ i.month, cluster(pnr)
-estout using "tables/Problem2.2.xls", cells(b(star fmt(3)) se(par fmt(3))) starlevels(* 0.10 ** 0.05 *** 0.01) legend style(tex) replace
+outreg2 using "tables/Problem2.2.xls",  replace excel dec(3)
 
 * Problem 2.3
 eststo clear
 eststo ols_7: reg jobcourse treat age age_sq educ i.month, r
 eststo ols_8: reg jobcourse treat age age_sq educ i.month, cluster(yob)
-eststo ols_9: reg jobcourse treat age age_sq educ i.month, cluster(prn)
-scalar b1st=_b[eligible]
-estout using "tables/Problem2.3.xls", cells(b(star fmt(3)) se(par fmt(3))) starlevels(* 0.10 ** 0.05 *** 0.01) legend style(tex) replace
+eststo ols_9: reg jobcourse treat age age_sq educ i.month, cluster(pnr)
+scalar b1st=_b[treat]
+outreg2 using "tables/Problem2.3.xls",  replace excel dec(3)
 
 * Problem 2.4
 eststo ols_6: reg employed treat age age_sq i.educ i.month, cluster(pnr)
@@ -154,7 +152,7 @@ scalar S_diff = JC_e1 - JC_e0
 scalar Wald_estimator = Y_diff/S_diff
 mat LATE=[Y_diff\S_diff\Wald_estimator]
 
-frmttable using "tables/Problem3_4", statmat(LATE) sdec(3) title("LATE") ///
+frmttable using tables/Problem3.4, statmat(LATE) sdec(3) title("LATE") ///
 	       rtitle("E(Y|Z=1)-E(Y|Z=0)"\"E(S|Z=1)-E(S|Z=0)"\"Wald estimate") replace
 
 ******************************************
@@ -165,14 +163,19 @@ frmttable using "tables/Problem3_4", statmat(LATE) sdec(3) title("LATE") ///
 
 eststo clear
 eststo iv_2m :ivregress 2sls employed age age_sq educ (jobcourse=treat) if month == 2 , cluster(yob)
+outreg2 using "tables/Problem4.1.xls",se ctitle(2sls wt 2 months) replace
 eststo iv_4m :ivregress 2sls employed age age_sq educ (jobcourse=treat) if month == 4 , cluster(yob)
+outreg2 using "tables/Problem4.1.xls",se ctitle(2sls wt 4 months) append
 eststo iv_6m :ivregress 2sls employed age age_sq educ (jobcourse=treat) if month == 6 , cluster(yob)
+outreg2 using "tables/Problem4.1.xls",se ctitle(2sls wt 6 months) append
 eststo iv_8m :ivregress 2sls employed age age_sq educ (jobcourse=treat) if month == 8 , cluster(yob)
+outreg2 using "tables/Problem4.1.xls",se ctitle(2sls wt 8 months) append
 eststo iv_10m:ivregress 2sls employed age age_sq educ (jobcourse=treat) if month == 10, cluster(yob)
+outreg2 using "tables/Problem4.1.xls",se ctitle(2sls wt 10 months) append
 eststo iv_12m:ivregress 2sls employed age age_sq educ (jobcourse=treat) if month == 12, cluster(yob)
+outreg2 using "tables/Problem4.1.xls",se ctitle(2sls wt 12 months) append
 
 estout, cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend
-estout using "tables/Problem4_1.xls", cells(b(star fmt(3)) se(par fmt(2))) starlevels(* 0.10 ** 0.05 *** 0.01) legend replace
 
 * Problem 4.2
 
